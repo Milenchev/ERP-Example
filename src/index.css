@@ -1,0 +1,783 @@
+body, html, #root {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  padding:0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.nav{
+  width: 100%;
+  height: 70px;
+  border-bottom: 1px solid lightblue;
+  float: left;
+  background-color: white;
+  color: black;
+}
+
+.menu{
+  margin-left: 30px;
+}
+
+  .menu span{
+      float: left;
+      font-size: 18px;
+      line-height: 69px;
+      margin-left: 20px;
+      font-weight: bold;
+  }
+      span.blue{
+          color: blue;
+          opacity: 0.5;
+      }
+
+a{
+  text-decoration: none!important;
+}
+
+.menu-profile{
+  float: right;
+  margin-right: 30px;
+  line-height: 69px;
+  font-size: 15px;
+  font-weight: bold;
+  width: 240px;
+}
+  .menu-profile span{
+      float: right;
+      margin-right: 10px;
+  }
+
+  .icon{
+      width: 100%;
+      height: 100%;
+      background-size: 20px;
+      background-position: center;
+      background-repeat: no-repeat;
+  }
+      .icon.bell{
+          background-image: url(../public/notification.svg);
+          width: 30px;
+          height: 30px;
+          background-size: 25px;
+          margin-top: 18px;
+          float: left;
+      }
+
+      .icon.icon-profile{
+          background-image: url(../public/boy.svg);
+          width: 40px;
+          height: 40px;
+          background-size: 38px;
+          margin-left: 25px;
+          margin-top: 15px;
+          float: left;
+      }
+
+      .data{
+        float: left;
+        background-color: rgb(232, 249, 255);
+        width: 100%;
+        height: calc(100% - 70px);
+        overflow: auto;
+    }
+        .box{
+            float: left;
+            width: calc(25% - 37.5px);
+            height: 170px;
+            background-color: white;
+            margin-left: 30px;
+            margin-top: 20px;
+        }
+            
+    
+            .grey{
+                color: grey;
+                font-weight: bold;
+                font-size: 16px;
+                width:100%;
+                height: 30px;
+                line-height: 30px;
+                margin-top: 10px;
+                margin-left: 20px;
+            }
+    
+                .grey > span {
+                    float:left;
+                    width:auto;
+                }
+    
+                .grey > i {
+                    float:left;
+                }
+    
+            .money{
+                width: calc(70% - 40px);
+                float: left;
+                margin-top: 30px;
+                font-size: 36px;
+                color: rgb(107, 107, 255);
+                opacity: 1;
+                font-weight: bold;
+                margin-left: 20px;
+            }
+    
+            .chart-box{
+                width: 30%;
+                margin-right: 20px;
+                height: 70px;
+                float: left;
+                background-color: black;
+                margin-top: 20px;
+            }
+                .icon.arrow{
+                    background-image: url(../public/arrows.svg);
+                    width: 20px;
+                    height: 20px;
+                    margin-top: 3px;
+                    margin-left: 5px;
+                    background-size: 20px;
+                    float: left;
+                }
+
+
+                .table-holder{
+                  width: 100%;
+                  float: left;
+                  margin-top: 30px;
+                  overflow: auto;
+                  margin-bottom: 20px;
+              }
+                  .table{
+                      width: calc(50% - 45px);
+                      float: left;
+                      height: 100%;
+                      margin-left: 30px;
+                      background-color: white;
+                  }
+                      .text-table{
+                          margin-left: 20px;
+                          margin-top: 20px;
+                          font-size: 16px;
+                          float: left;
+                      }
+                      table {
+                          float: left;
+                          width: 95%;
+                          border-collapse: collapse;
+                          margin-top: 20px;
+                          margin-left: 2.5%;
+                         
+                      }
+                              th, td {
+                                  border: 1px solid lightgrey;
+                                  padding: 10px;
+                                  text-align: center;
+                              }
+                              th {
+                                  background-color: lightgrey;
+                              }
+                              tr{
+                                  background-color:white;
+                              }
+
+                              tfoot{
+                                width: 100%;
+                                  text-align: left;
+                                  background-color: lightgrey;
+                              }
+
+                              tfoot td{
+                                background-color: lightgrey;
+                              }
+              
+                              .menu {
+                                  display: block;
+                                  position: relative;
+                              }
+
+                              .badge-waiting{                                
+                                background-color: orange;
+                                border-radius: 5px;
+                                padding: 5px;
+                                color: white;
+                                font-size: 10px;
+                                font-weight: bold;
+                              }
+
+                              .badge-failed{
+                                background-color: red;
+                                border-radius: 5px;
+                                padding: 5px;
+                                color: white;
+                                font-size: 10px;
+                                font-weight: bold;
+                              }
+
+                              .badge-paid{                               
+                                background-color: rgb(4, 195, 4);
+                                border-radius: 5px;
+                                padding: 5px;
+                                color: white;
+                                font-size: 10px;
+                                font-weight: bold;
+                              }
+  
+/* Документи */
+.invoices-nav{
+  width: 100%;
+  height: 70px;
+  border-bottom: 1px solid lightblue;
+  float: left;
+  background-color: white;
+  color: black;
+}
+
+.invoices-menu{
+  margin-left: 40px;
+  line-height: 70px;
+}
+
+  .invoices-menu span{
+      float: left;
+      font-size: 14px;
+      line-height: 70px;
+      margin-left: 20px;
+      font-weight: bold;
+  }
+      span.blue{
+          color: blue;
+          opacity: 0.5;
+      }
+
+        .left-menu{
+          width: 270px;
+          margin-left: 25px;
+          height: 100%;
+          float: left;
+        }
+
+          .left-menu-content{
+            margin-top: 40px;
+            float: left;
+            width: 100%;
+            height: 180px;
+            border: 1px solid lightblue;
+          }
+
+          .content-header{
+            float: left;
+            width: 100%;
+            height:40px;
+            margin-top: 20px;
+            margin-left: 10px;
+            font-weight: bold;
+            color: rgb(95, 95, 95);
+          }
+
+          .content{
+            float: left;
+            line-height: 40px;
+            padding-left: 10px;
+            width: calc(100% - 10px);
+            background-color: rgb(153, 153, 234);
+            color: white;
+            font-size: 14px;
+            border-bottom: 1px solid white;
+            height: 40px;
+            font-weight: bold;
+          }
+          
+
+          .content-default{
+            float: left;
+            color: rgb(95, 95, 95);
+            font-weight: bold;
+            width: 100%;
+            font-size: 14px;
+            line-height: 40px;
+            padding-left: 10px;
+          }
+
+      
+          .invoices-main-content{
+            width: calc(100% - 355px);
+            font-size: 14px;
+            float: left;
+            height: 590px;
+            border: 1px solid lightblue;
+            margin-left: 40px;
+            margin-top: 40px;
+          }
+          .invoices-main-content-2{
+            width: 95%;
+            font-size: 14px;
+            float: left;
+            height: 590px;
+            border: 1px solid lightblue;
+            margin-left: 40px;
+            margin-top: 40px;
+          }
+
+          .main-content-header{
+            float: left;
+            width: 100%;
+            height: 40px;
+          }
+
+            .header-Name{
+              float: left;
+              line-height: 40px;
+              margin-left: 15px;
+              margin-top: 5px;
+              color: rgb(95, 95, 95);
+              font-weight: bold;
+            }
+
+            .header-Number{
+              float: left;
+              line-height: 40px;
+              margin-left: 2px;
+              margin-top: 5px;
+              color: rgb(95, 95, 95);
+              font-weight: bold;
+            }
+
+            input{
+              padding-left: 25px;
+              float: right;
+              width: 220px;
+              margin-top: 12px;
+              line-height: 26px;
+              border-radius: 5px;
+              border:1px solid grey;
+            }
+
+            .button-Add{
+              float: right;
+              line-height: 30px;
+              margin-left: 10px;
+              background-color: rgb(153, 153, 234);
+              margin-top: 12px;
+              border-radius: 5px;
+              padding-left:10px;
+              font-size: 12px;
+              width: 180px;
+              color: white;
+              font-weight: bold;
+            }
+            .button-Add-2{
+              float: right;
+              line-height: 30px;
+              margin-left: 10px;
+              margin-right: 27px;
+              background-color: rgb(153, 153, 234);
+              margin-top: 12px;
+              border-radius: 5px;
+              padding-left:10px;
+              font-size: 12px;
+              width: 180px;
+              color: white;
+              font-weight: bold;
+            }
+
+            .btn-2{
+              float: right;
+              line-height: 30px;
+              margin-left: 10px;
+              margin-right: 20px;
+              background-color: rgb(153, 153, 234);
+              margin-top: 12px;
+              border-radius: 5px;
+              padding-left: 10px;
+              font-size: 12px;
+              font-weight: bold;
+              width: 90px;
+              color: white;
+            }
+
+            .images{
+              float: left;
+              margin-top: 22px;
+              width: 30px;
+              height: 50px;
+            }
+            .images.sales{  
+              background-image: url(../public/cart.svg);
+              background-size: 22px;
+              background-repeat: no-repeat;
+            }
+
+            .images.package{
+              background-image: url(../public/fast-delivery.svg);
+              background-size: 22px;
+              background-repeat: no-repeat;
+              margin-top: 24px;
+              margin-left: 15px;
+            }
+
+            .images.repeat{
+              background-image: url(../public/undo.svg);
+              background-size: 18px;
+              background-repeat: no-repeat;
+              margin-top: 24px;
+              margin-left: 15px;
+            }
+
+            .images.mail{
+              background-image: url(../public/email.svg);
+              background-size: 20px;
+              background-repeat: no-repeat;
+              margin-top: 24px;
+              margin-left: 15px;
+            }
+
+            .icon-add{
+              background-image: url(../public/plus.svg);
+              background-size: 16px;
+              background-repeat: no-repeat;
+              margin-top: 7px;
+              margin-right: 7px;
+              height: 20px;
+              width: 20px;
+              float: left;
+            }
+
+            .icon-up{
+              background-image: url(../public/bars-graphic-with-ascendant-arrow.svg);
+              background-size: 16px;
+              background-repeat: no-repeat;
+              margin-top: 7px;
+              margin-right: 7px;
+              height: 20px;
+              width: 20px;
+              float: left;
+            }
+
+            .search-holder{
+              position: relative;
+              float: right;
+            }
+            .icon-search{
+              left: 5px;
+              top: 12px;
+              position: absolute;
+              background-image: url(../public/search-interface-symbol.svg);
+              background-size: 16px;
+              background-repeat: no-repeat;
+              margin-top: 7px;
+              margin-right: 7px;
+              height: 20px;
+              width: 20px;
+            }
+
+            .icon-pen{
+              background-image: url(../public/pen.svg);
+              background-size: 16px;
+              background-repeat: no-repeat;
+              margin-top: 7px;
+              margin-left: 5px;
+              margin-right: 3px;
+              height: 20px;
+              width: 20px;
+              float: left;
+            }
+
+            .icon-print{
+              background-image: url(../public/printer.svg);
+              background-size: 16px;
+              background-repeat: no-repeat;
+              margin-top: 7px;
+              margin-right: 3px;
+              height: 20px;
+              width: 20px;
+              float: left;
+            }
+
+            .icon-bag{
+              background-image: url(../public/money.svg);
+              background-size: 16px;
+              background-repeat: no-repeat;
+              margin-top: 7px;
+              margin-right: 3px;
+              height: 20px;
+              width: 20px;
+              float: left;
+            }
+
+            .icon-trash{
+              background-image: url(../public/trash-bin.svg);
+              background-size: 16px;
+              background-repeat: no-repeat;
+              margin-top: 7px;
+              margin-right: 7px;
+              height: 20px;
+              width: 20px;
+              float: left;
+            }
+
+            .icons{
+              padding: 0;
+            }
+
+
+
+/* ViewInvoice */
+
+  .fax-header{
+    width: 100%;
+    float: left;
+    height: 200px;
+    font-weight: bold;
+  }
+    .fax-name{
+      width: 300px;
+      float: left;
+      margin-left: 50px;
+      margin-top: 40px;
+      font-size: 30px;
+    }
+      .fax-logo{
+        background-color: black;
+        float: right;
+        width: 320px;
+        height: 100px;
+        margin-right: 200px;
+        margin-top: 40px;
+      }
+
+  .fax-content-row{
+      float: left;
+      width: calc(50% - 40px);
+      margin-left: 40px;
+  }
+    .row{
+      float: left;
+      width: 100%;
+    }
+
+    .fax-content-header{
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      margin-top: 30px;
+     
+    }
+
+      .row-1{
+        width: 30%;float: left;
+        font-size: 12px;
+        margin-bottom: 0px;
+        margin-top: 10px;
+       
+      }
+      .row-2{
+        width: 70%;float: right;
+        font-size: 12px;
+        font-weight: bold;
+        margin-top: 10px;
+      }
+
+
+      .fax-content-right{
+          float: left;
+          width: calc(50% - 50px);
+          margin-right:50px;
+        
+      }
+               
+      
+      .fax-table{
+        font-size: 12px;
+      }
+
+      .bold{
+        font-weight: bold;
+      }
+
+      .bold-right{
+        font-weight: bold;
+        text-align: right;
+      }
+
+      .bold-left{
+        font-weight: bold;
+        text-align:left;
+      }
+
+      .reciever{
+        float: left;
+        margin-left: 40px;
+        margin-top: 100px;
+        font-size: 12px;
+      }
+
+      .owner{
+        float: right;
+        font-size: 12px;
+        margin-right: 40px;
+        margin-top: 100px;
+      }
+      .shifer{
+        float: right;
+        margin-top: 100px;
+        margin-right: 40px;
+        font-size: 12px;
+      }
+
+      .fax-row-holder{
+        float: left;
+        width: 100%;
+      }
+
+      @media print{
+        .nav{
+          display: none;
+        }
+
+      }
+
+
+      footer{
+        float: left;
+        width: 100%;
+      }
+
+/* AddOutgoingInvoice */
+
+.add-fax-holder{
+  float: left;
+  margin-left: 20px;
+  margin-top: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  width: calc(100% - 40px);
+  height: calc(100% - 30px);
+  background-color: white;
+  border-radius: 5px;
+  border: 1px solid grey;
+}
+  .add-fax-header{
+    width: 100%;
+    height: 40px;
+    float: left;
+    margin-left: 20px;
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .input-holder{
+    float: left;
+    width: 100%;
+    height: 100px;
+  }
+    .input-holder input{
+      float: left;
+    }
+
+    .label-holder{
+      float: left;
+      width: 100%;
+      margin-left: 22px;
+    }
+
+    .label-holder span{
+      margin-left: 20px;
+    }
+
+     .row{
+      width: calc(100% - 40px);
+      margin-left: 20px;
+      float: left;
+     }
+
+     .input-row{
+      float: left;
+      width: 100%;
+     }
+
+     .row span{
+      width: 100%;
+      float: left;
+     }
+
+     .input-label{
+      padding-left: 0;
+      
+     }
+
+     select{
+      width: 100%;
+      float: left;
+      width: calc(100% - 20px);
+      padding-left: 0px;
+      height: 30px;
+      margin-top: 11px;
+     }
+.col-1 {width: calc(8.33% - 2px) !important;}
+.col-2 {width: calc(16.66% - 2px) !important;}
+.col-3 {width: calc(25% - 2px) !important;}
+.col-4 {width: calc(33.33% - 2px) !important;}
+.col-5 {width: calc(41.66% - 2px) !important;}
+.col-6 {width: calc(50% - 2px) !important;}
+.col-7 {width: calc(58.33% - 2px) !important;}
+.col-8 {width: calc(66.66% - 2px) !important;}
+.col-9 {width: calc(75% - 2px) !important;}
+.col-10 {width: calc(83.33% - 2px) !important;}
+.col-11 {width: calc(91.66% - 2px) !important;}
+.col-12 {width: calc(100% - 2px) !important;}
+
+
+.footer{
+  width: 100%;
+  height: 68px;
+  margin-top: 45px;
+  float: left;
+  background-color: lightgrey;
+}
+
+.btn-back{
+  float: right;
+  margin-top: 10px;
+  margin-right: 40px;
+  background-color: white;
+  border-radius: 5px;
+  border: 1px solid black;
+  width: 60px;
+  line-height: 40px;
+}
+
+.btn-add{
+  float: right;
+  margin-top: 10px;
+  margin-right: 40px;
+  background-color: lightblue;
+  border-radius: 5px;
+  border: 1px solid black;
+  padding: 10px;
+  width: 80px;
+  line-height: 20px;
+}
+
+
+.btn-addAndPrint{
+  float: right;
+  margin-top: 10px;
+  margin-right: 40px;
+  background-color: lightblue;
+  border-radius: 5px;
+  border: 1px solid black;
+  padding: 10px;
+  width: 150px;
+  line-height: 20px;
+}
