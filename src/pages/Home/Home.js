@@ -51,7 +51,7 @@ const Home = () => {
           </div>
 
           <div className="money">
-            <span>{totalIncomingValue} лв</span>
+            <span>{(totalIncomingValue).toFixed(2)} лв</span>
           </div>
           <div className="chart-box"></div>
         </div>
@@ -62,7 +62,7 @@ const Home = () => {
           </div>
 
           <div className="money">
-            <span>{totalOutgoingValue} лв</span>
+            <span>{(totalOutgoingValue).toFixed(2)} лв</span>
           </div>
           <div className="chart-box"></div>
         </div>
@@ -73,7 +73,7 @@ const Home = () => {
           </div>
 
           <div className="money">
-            <span>{totalDebtToUs} лв</span>
+            <span>{(totalDebtToUs).toFixed(2)} лв</span>
           </div>
           <div className="chart-box"></div>
         </div>
@@ -84,7 +84,7 @@ const Home = () => {
           </div>
 
           <div className="money">
-            <span>{totalDebtToSuppliers} лв</span>
+            <span>{(totalDebtToSuppliers).toFixed(2)} лв</span>
           </div>
           <div className="chart-box"></div>
         </div>

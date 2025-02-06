@@ -4,8 +4,6 @@ import styles from './Documents.module.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Outlet, Link } from "react-router-dom";
 
-
-
 const Documents = () => {
 
   const [outgoingInvoices, setOutgoingInvoices] = useState([]);    // State to store API data
@@ -31,6 +29,26 @@ const Documents = () => {
   
       fetchData();
     }, []);  // Runs once when the component mounts
+
+    const handleDelete = async (id) => {
+      if (!window.confirm('Сигурни ли сте, че искате да изтриете тази фактура?')) {
+        return;
+      }
+      try {
+        const response = await fetch(`http://localhost:5001/deleteOutgoingInvoices?id=${id}`, {
+          method: 'DELETE',
+        });
+  
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+  
+        // Update state to remove the deleted invoice
+        setOutgoingInvoices(prevInvoices => prevInvoices.filter(invoice => invoice.uid !== id));
+      } catch (error) {
+        console.error('Error deleting invoice:', error);
+      }
+    };
 
     const [searchTerm, setSearchTerm] = useState("");
 
@@ -104,9 +122,9 @@ return (
                             <th>Действие</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody  class="invoices-th">
                         
-                            {filterOutgoingInvoices.slice(0, 10).map((invoice, index) => (
+                            {filterOutgoingInvoices.map((invoice, index) => (
                             <tr>
                               <td width="3%">{index + 1}</td>
                               <td width="20%">{invoice.date}</td>
@@ -151,14 +169,14 @@ return (
                                 <i class="icon-pen"></i>
                                 <Link to={`/view-invoice?invoice_id=${index}`}><i class="icon-print"></i></Link>
                                 <i class="icon-bag"></i>
-                                <i class="icon-trash"></i>
+                                <i class="icon-trash" onClick={() => handleDelete(invoice.uid)} style={{ cursor: 'pointer', color: 'red' }}> </i>
                               </td>
                             </tr>
                           ))}
                     </tbody>
                     <tfoot>
                       <tr>
-                          <td colSpan="6"  style={{textAlign:'left'}}><span>Общо фактури: 1785</span></td>
+                          <td colSpan="6"  style={{textAlign:'left'}}><span>Общо фактури: {outgoingInvoices.length}</span></td>
                           <td colSpan="2"><span>Тотал: 2000000 лв.</span></td>
                       </tr>
                     

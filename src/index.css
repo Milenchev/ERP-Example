@@ -121,7 +121,7 @@ a{
                 }
     
             .money{
-                width: calc(70% - 40px);
+                width: calc(75% - 40px);
                 float: left;
                 margin-top: 30px;
                 font-size: 36px;
@@ -132,11 +132,14 @@ a{
             }
     
             .chart-box{
-                width: 30%;
-                margin-right: 20px;
-                height: 70px;
+                width: 20%;
+                margin-left: 15 px;
+                margin-right: 5px;
+                height: 60px;
                 float: left;
-                background-color: black;
+                background-image: url(../public/bar-chart.svg);
+                background-position: cover;
+                background-repeat: no-repeat;
                 margin-top: 20px;
             }
                 .icon.arrow{
@@ -151,12 +154,13 @@ a{
 
 
                 .table-holder{
+                  overflow: auto;
                   width: 100%;
                   float: left;
                   margin-top: 30px;
-                  overflow: auto;
                   margin-bottom: 20px;
               }
+              
                   .table{
                       width: calc(50% - 45px);
                       float: left;
@@ -219,7 +223,7 @@ a{
                                 border-radius: 5px;
                                 padding: 5px;
                                 color: white;
-                                font-size: 10px;
+                                font-size: 7px;
                                 font-weight: bold;
                               }
 
@@ -242,9 +246,48 @@ a{
   color: black;
 }
 
+
+
 .invoices-menu{
   margin-left: 40px;
   line-height: 70px;
+}
+.invoices-table {
+  position: relative;
+}
+
+.invoices-table table {
+  width: 95%;
+  border-collapse: collapse;
+}
+
+.invoices-table thead, 
+.invoices-table tfoot {
+  background: #f9f9f9; /* Adjust as needed */
+  position: sticky;
+  z-index: 1;
+}
+
+.invoices-table thead {
+  top: 0;
+}
+
+.invoices-table tfoot {
+  bottom: 0;
+}
+
+.invoices-table tbody {
+  display: block;
+  max-height: 400px; /* Adjust height as needed */
+  overflow-y: auto;
+}
+
+.invoices-table thead tr, 
+.invoices-table tfoot tr, 
+.invoices-table tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed; /* Ensures columns align */
 }
 
   .invoices-menu span{
@@ -748,36 +791,36 @@ a{
 
 .btn-back{
   float: right;
-  margin-top: 10px;
+  padding: 10px;
+  padding-left: 20px;
+  margin-top: 12px;
   margin-right: 40px;
   background-color: white;
   border-radius: 5px;
   border: 1px solid black;
   width: 60px;
-  line-height: 40px;
 }
 
 .btn-add{
   float: right;
-  margin-top: 10px;
-  margin-right: 40px;
+  margin-top: 12px;
+  margin-right: 30px;
   background-color: lightblue;
   border-radius: 5px;
   border: 1px solid black;
   padding: 10px;
   width: 80px;
-  line-height: 20px;
+  cursor: pointer;
 }
 
 
 .btn-addAndPrint{
   float: right;
-  margin-top: 10px;
+  margin-top: 12px;
   margin-right: 40px;
   background-color: lightblue;
   border-radius: 5px;
   border: 1px solid black;
   padding: 10px;
   width: 150px;
-  line-height: 20px;
 }
