@@ -8,7 +8,7 @@ const Layout = () => {
         <div class="menu">
           <span class="blue"><Link to="/">НАЧАЛО</Link></span>
           <span><Link to="/Documents">ДОКУМЕНТИ</Link> </span>
-          <span><Link to="/contact" >КОНТРАГЕНТИ</Link></span>
+          <span><Link to="/clients" >КЛИЕНТИ</Link></span>
         </div>
 
         <div class="menu-profile">

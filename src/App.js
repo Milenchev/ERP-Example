@@ -7,6 +7,9 @@ import Documents from "./pages/Documents/Documents";
 import Expenses from "./pages/Expenses/Expenses";
 import ViewInvoice from "./pages/ViewInvoice/ViewInvoice";
 import AddOutputInvoice from "./pages/AddOutputInvoice/AddOutputInvoice";
+import AddIncomingInvoice from "./pages/AddIncomingInvoice/AddIncomingInvoice";
+import ClientsPage from "./pages/ClientsPage/ClientsPage";
+import AddClients from "./pages/AddClients/AddClients";
 
 function App() {
   return (
@@ -26,6 +29,15 @@ function App() {
       </Route>
       <Route path="/add-invoice" element={<Layout />}>
         <Route index element={<AddOutputInvoice />} />
+      </Route>
+      <Route path="/add-incoming-invoice" element={<Layout />}>
+        <Route index element={<AddIncomingInvoice />} />
+      </Route>
+      <Route path="/clients" element={<Layout />}>
+        <Route index element={<ClientsPage />} />
+      </Route>
+      <Route path="/add-clients" element={<Layout />}>
+        <Route index element={<AddClients />} />
       </Route>
     </Routes>
   </BrowserRouter>

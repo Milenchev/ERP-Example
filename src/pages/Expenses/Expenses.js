@@ -34,6 +34,27 @@ const Expenses = () => {
       const filterIncomingInvoices = incomingInvoices.filter((invoice) => 
         invoice.supplier.toLowerCase().includes(searchTerm.toLowerCase())
       );
+
+
+      const handleDelete = async (id) => {
+        if (!window.confirm('Сигурни ли сте, че искате да изтриете тази фактура?')) {
+          return;
+        }
+        try {
+          const response = await fetch(`http://localhost:5001/deleteIncomingInvoices?id=${id}`, {
+            method: 'DELETE',
+          });
+    
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+    
+          // Update state to remove the deleted invoice
+          setIncomingInvoices(prevInvoices => prevInvoices.filter(invoice => invoice.uid !== id));
+        } catch (error) {
+          console.error('Error deleting invoice:', error);
+        }
+      };
   
 
   return(
@@ -59,11 +80,12 @@ const Expenses = () => {
             ({incomingInvoices.length})
         </div>
 
+         <Link to={`/add-incoming-invoice`}> <div class="button-Add-2" >
+                <i class="icon-add"></i>
+                  Добавяне на фактура
+                </div></Link>
 
-        <div class="button-Add-2">
-           <i class="icon-add"></i>
-          Добавяне на фактура
-        </div>
+      
         <div class="search-holder">
           <i class="icon-search"></i>
           <input type="text" placeholder="Търсене" name="defaultInput" id="defaultInput" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
@@ -112,7 +134,7 @@ const Expenses = () => {
                                 <i class="icon-pen"></i>
                                 <i class="icon-print"></i>
                                 <i class="icon-bag"></i>
-                                <i class="icon-trash"></i>
+                                <i class="icon-trash" onClick={() => handleDelete(invoice.uid)} style={{ cursor: 'pointer', color: 'red' }}></i>
                               </td>
                             </tr>
                           ))}
