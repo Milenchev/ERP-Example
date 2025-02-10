@@ -102,7 +102,7 @@ const Home = () => {
 
         <div className="table-holder">
           <div className="table">
-            <span className="text-table">Последните 10 входящи фактури</span>
+            <span className="text-table">Последните {incomingInvoices.length} входящи фактури</span>
             <table>
               <thead>
                 <tr>
@@ -135,7 +135,7 @@ const Home = () => {
           </div>
 
           <div className="table">
-            <span className="text-table">Последните 10 изходящи фактури</span>
+            <span className="text-table">Последните {outgoingInvoices.length} изходящи фактури</span>
             {loading ? (
               <p>Loading...</p>
             ) : error ? (

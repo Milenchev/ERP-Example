@@ -8,6 +8,8 @@ const Expenses = () => {
   const [incomingInvoices, setIncomingInvoices] = useState([]);    // State to store API data
     const [loading, setLoading] = useState(true);    // Loading state
     const [error, setError] = useState(null);        // Error state
+    const totalIncomingValue = incomingInvoices.reduce((sum, invoice) => sum + invoice.invoiceValue, 0);
+    
   
       // Fetch data from RESTful API
       useEffect(() => {
@@ -65,7 +67,7 @@ const Expenses = () => {
           <span class="blue"> <i class="images sales"></i> <Link to="/Documents">ПРОДАЖБИ</Link></span>
           <span> <i class="images package"></i> <Link to="/Expenses">РАЗХОДИ</Link></span>
           <span> <i class="images repeat"></i> АВТОМАТИЧНИ ТАКСУВАНИЯ</span>
-          <span> <i class="images mail"></i> ОФЕРТИ</span>
+          <span> <i class="images mail"></i> <Link to="/offers">ОФЕРТИ</Link></span>
           <span> <i class="images mail"></i> ТОВАРИТЕЛНИЦИ</span>
         </div>
 
@@ -141,8 +143,8 @@ const Expenses = () => {
                     </tbody>
                     <tfoot>
                       <tr>
-                          <td colSpan="6" style={{textAlign:'left'}}><span>Общо фактури: 1785</span></td>
-                          <td colSpan="2"><span>Тотал: 2000000 лв.</span></td>
+                          <td colSpan="6" style={{textAlign:'left'}}><span>Общо фактури: {incomingInvoices.length}</span></td>
+                          <td colSpan="2"><span>Тотал: {totalIncomingValue} лв.</span></td>
                       </tr>
                     
                     </tfoot>

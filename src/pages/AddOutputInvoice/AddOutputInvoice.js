@@ -77,7 +77,7 @@ const AddOutputInvoice = () => {
 
           <div className="col-2 input-row">
             <span>Тип на документа</span>
-            <select id="fruits" name="fruits" value={typeDoc} onChange={(e) => setTypeDoc(e.target.value)}>
+            <select id="type" name="type" value={typeDoc} onChange={(e) => setTypeDoc(e.target.value)}>
                 <option value="0">Фактура</option>
                 <option value="1">Проформа фактура</option>
             </select>
@@ -133,7 +133,7 @@ const AddOutputInvoice = () => {
                                   <tr key={invoice.id} >
                             
                                   <td width="3%">{invoice.id}</td>
-                                  <td width="20%" > <input type="text" id={`name-${index}`} name="name" value={invoice.name} onChange={(e) => handleInputChange(invoice.id, e, index, "name")} /> 
+                                  <td width="20%" > <input class="width-90" type="text" id={`name-${index}`} name="name" value={invoice.name} onChange={(e) => handleInputChange(invoice.id, e, index, "name")} /> 
                                     </td>
                                   <td>  
                                   <select id="unit" name="unit">

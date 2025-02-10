@@ -9,6 +9,8 @@ const Documents = () => {
   const [outgoingInvoices, setOutgoingInvoices] = useState([]);    // State to store API data
   const [loading, setLoading] = useState(true);    // Loading state
   const [error, setError] = useState(null);        // Error state
+  const [activeLink, setActiveLink] = useState(null);
+  const totalOutgoingValue = outgoingInvoices.reduce((sum, invoice) => sum + invoice.invoiceValue, 0);
 
     // Fetch data from RESTful API
     useEffect(() => {
@@ -56,17 +58,35 @@ const Documents = () => {
       invoice.client.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    const handleClick = (e) => {
+      const parentElement = e.target.closest('span');
+      if (parentElement) {
+        setActiveLink(parentElement);
+        console.log(activeLink);
+      }
+    };
+
 return (
   <div className={styles.Documents}>
     <div className="invoices-nav">
+        <div className="invoices-menu">
+            <span 
+              className={activeLink && activeLink.textContent === 'ПРОДАЖБИ' ? 'clicked' : ''}
+              onClick={handleClick}
+            >
+              <i className="images sales"></i> <Link to="/Documents">ПРОДАЖБИ</Link>
+            </span>
 
-      <div class="invoices-menu">
-        <span class="blue"> <i class="images sales"></i> <Link to="/Documents">ПРОДАЖБИ</Link></span>
-        <span> <i class="images package"></i> <Link to="/Expenses">РАЗХОДИ</Link></span>
-        <span> <i class="images repeat"></i> АВТОМАТИЧНИ ТАКСУВАНИЯ</span>
-        <span> <i class="images mail"></i> ОФЕРТИ</span>
-        <span> <i class="images mail"></i> ТОВАРИТЕЛНИЦИ</span>
-      </div>
+            <span 
+              className={activeLink === '/Expenses' ? 'clicked' : ''} 
+              onClick={handleClick}
+            >
+              <i className="images package"></i> <Link to="/Expenses">РАЗХОДИ</Link>
+            </span>
+          <span onClick={handleClick}> <i className="images repeat"></i> АВТОМАТИЧНИ ТАКСУВАНИЯ</span>
+          <span> <i className="images mail"></i><Link to="/offers">ОФЕРТИ</Link></span>
+          <span onClick={handleClick}> <i className="images mail"></i> ТОВАРИТЕЛНИЦИ</span>
+        </div>
 
     </div>
 
@@ -177,7 +197,7 @@ return (
                     <tfoot>
                       <tr>
                           <td colSpan="6"  style={{textAlign:'left'}}><span>Общо фактури: {outgoingInvoices.length}</span></td>
-                          <td colSpan="2"><span>Тотал: 2000000 лв.</span></td>
+                          <td colSpan="2"><span>Тотал: {totalOutgoingValue.toFixed()} лв.</span></td>
                       </tr>
                     
                     </tfoot>

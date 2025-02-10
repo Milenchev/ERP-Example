@@ -1,14 +1,42 @@
 import { Outlet, Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
 
 const Layout = () => {
+
+  const [activeLink, setActiveLink] = useState(null);
+
+  const handleClick = (e) => {
+    const parentElement = e.target.closest('span');
+    if (parentElement) {
+      setActiveLink(parentElement);
+    }
+  };
+
   return (
     <>
       <div className="nav">
 
-        <div class="menu">
-          <span class="blue"><Link to="/">НАЧАЛО</Link></span>
-          <span><Link to="/Documents">ДОКУМЕНТИ</Link> </span>
-          <span><Link to="/clients" >КЛИЕНТИ</Link></span>
+      <div className="menu">
+          <span 
+            onClick={handleClick} 
+            className={activeLink && activeLink.textContent === 'НАЧАЛО' ? 'clicked' : ''}
+          >
+            <Link to="/">НАЧАЛО</Link>
+          </span>
+
+          <span 
+            onClick={handleClick} 
+            className={activeLink && activeLink.textContent === 'ДОКУМЕНТИ' ? 'clicked' : ''}
+          >
+            <Link to="/Documents">ДОКУМЕНТИ</Link>
+          </span>
+
+          <span 
+            onClick={handleClick} 
+            className={activeLink && activeLink.textContent === 'КЛИЕНТИ' ? 'clicked' : ''}
+          >
+            <Link to="/clients">КЛИЕНТИ</Link>
+          </span>
         </div>
 
         <div class="menu-profile">

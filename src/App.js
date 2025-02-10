@@ -10,6 +10,9 @@ import AddOutputInvoice from "./pages/AddOutputInvoice/AddOutputInvoice";
 import AddIncomingInvoice from "./pages/AddIncomingInvoice/AddIncomingInvoice";
 import ClientsPage from "./pages/ClientsPage/ClientsPage";
 import AddClients from "./pages/AddClients/AddClients";
+import Offers from "./pages/Offers/Offers";
+import PrintOffer from './pages/PrintOffer/PrintOffer';
+import AddOffer from './pages/AddOffer/AddOffer';
 
 function App() {
   return (
@@ -38,6 +41,15 @@ function App() {
       </Route>
       <Route path="/add-clients" element={<Layout />}>
         <Route index element={<AddClients />} />
+      </Route>
+      <Route path="/offers" element={<Layout />}>
+        <Route index element={<Offers />} />
+      </Route>
+      <Route path="/print-offers" element={<Layout />}>
+        <Route index element={<PrintOffer />} />
+      </Route>
+      <Route path="/add-offer" element={<Layout />}>
+        <Route index element={<AddOffer />} />
       </Route>
     </Routes>
   </BrowserRouter>

@@ -4,10 +4,11 @@ import styles from './AddIncomingInvoice.module.css';
 import { Outlet, Link } from "react-router-dom";
 
 const AddOutputInvoice = () => {
- const [clientName, setClientName] = useState("");
- const [owner, setOwner] = useState("");
+ 
+ const [supplier, setSupplier] = useState("");
  const [typeDoc, setTypeDoc] = useState("0");
  const [faxNum, setFaxNum] = useState("");
+ const [invoiceTotalValue, setInvoiceTotalValue]=useState(0)
  const [faxDate, setFaxDate] = useState("");
  const [paymentType, setPaymentType] = useState("0");
  const [responseProducts, setResponseProducts] = useState([]);
@@ -21,12 +22,16 @@ const AddOutputInvoice = () => {
       acc + (invoice.quantity * invoice.price) * (1 - invoice.discount / 100) +
         (invoice.quantity * invoice.price) * (1 - invoice.discount / 100) * 0.20
     ), 0).toFixed(2);
-    const response = await fetch('http://localhost:5001/addOutgoingInvoice', {
+    let date_split = faxDate.split(".");
+    let exp_date = new Date(date_split[1] + "." + date_split[0] + "." + date_split[2]);
+    exp_date.setDate(exp_date.getDate() + 15);
+    let exp_date_format = exp_date.getDate() + "." + (exp_date.getMonth() + 1) + "." + exp_date.getFullYear();
+    const response = await fetch('http://localhost:5001/addIncomingInvoice', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ 'invoice':{ 'ownerName': owner, 'type': typeDoc, 'fax': faxNum, 'date':faxDate, 'typeOfPayment':paymentType, 'total_value':invoiceTotalValue, 'products':products } }), // Send your data here
+      body: JSON.stringify({ 'invoice':{ 'supplierName': supplier, 'expDate':exp_date_format, 'type': typeDoc, 'fax': faxNum, 'date':faxDate, 'typeOfPayment':paymentType, 'total_value':invoiceTotalValue, 'products':products } }), // Send your data here
     });
 
     const result = await response.json();
@@ -60,27 +65,15 @@ const AddOutputInvoice = () => {
   <div className={styles.AddOutputInvoice}>
     <div className="add-fax-holder">
       <div className="add-fax-header">
-        <span>Добавяне на изходна фактура (3000001618)</span>
+        <span>Добавяне на входна фактура</span>
       </div>
 
       <div className="input-holder">  
         <div className="row">
+        <span style={{marginBottom: "15px", fontWeight:"Bold"}}>Основна информация</span>
           <div className="col-3 input-row">
-            <span>Клиент</span>
-            <input className="input-label" type="text" placeholder="" name="defaultInput" value={clientName} onChange={(e) => setClientName(e.target.value)}/>
-          </div>
-
-          <div className="col-3 input-row">
-            <span>МОЛ</span>
-            <input className="input-label" type="text" placeholder="" name="defaultInput" value={owner} onChange={(e) => setOwner(e.target.value)} />
-          </div>
-
-          <div className="col-2 input-row">
-            <span>Тип на документа</span>
-            <select id="fruits" name="fruits" value={typeDoc} onChange={(e) => setTypeDoc(e.target.value)}>
-                <option value="0">Фактура</option>
-                <option value="1">Проформа фактура</option>
-            </select>
+            <span>Доставчик</span>
+            <input style={{width: "80%"}} className="input-label" type="text" placeholder="" name="defaultInput" value={supplier} onChange={(e) => setSupplier(e.target.value)}/>
           </div>
 
           <div className="col-2 input-row">
@@ -88,11 +81,19 @@ const AddOutputInvoice = () => {
             <input className="input-label" type="text" placeholder="" name="defaultInput" value={faxNum} onChange={(e) => setFaxNum(e.target.value)} />
           </div>
 
-          <div className="col-2 input-row">
+          <div style={{marginLeft: "60px"}} className="col-2 input-row">
             <span>Дата на фактура</span>
             <input className="input-label" type="text" placeholder="" name="defaultInput" value={faxDate} onChange={(e) => setFaxDate(e.target.value)} />
           </div>
          
+
+
+          <div style={{marginLeft: "60px",}} className="col-3 input-row">
+            <span >Коментар</span>
+            <input  className="input-label" type="text" placeholder="" name="defaultInput" />
+          </div>
+
+          
           
         </div>
 
@@ -102,13 +103,41 @@ const AddOutputInvoice = () => {
 
       <div className="input-holder">  
         <div className="row">
-        
-        <div className="col-3 input-row">
-            <span>Начин на плащане</span>
+          
+        <div className="col-2 input-row">
+          <span style={{marginTop: "15px", marginBottom: "15px", fontWeight:"Bold", width: "90%", float: "left"}}>Детайли за плащане</span>
+            <span>Срок за плащане</span>
+            <select id="expDate" name="expDate">
+                <option >15 дни</option>
+               
+            </select>
+          </div>
+
+          <div className="col-2 input-row" style={{marginTop: "48px", marginLeft: "120px"}}>
+
+          <span>Начин на плащане</span>
             <select id="fruits" name="fruits" value={paymentType} onChange={(e) => setPaymentType(e.target.value)}>
                 <option value="0">Банков превод</option>
                 <option value="1">В брой</option>
                 <option value="2">Пощенски паричен</option>
+               
+            </select>
+            
+          </div>
+
+          <div className="col-2 input-row" style={{marginTop: "48px", marginLeft: "60px"}}>
+          
+            <span>Сума за плащане (С ДДС)</span>
+            <input className="input-label" type="text" placeholder="" name="defaultInput" value={invoiceTotalValue} onChange={(e) => setInvoiceTotalValue(e.target.value)} />
+          </div>
+
+          <div className="col-2 input-row" style={{marginTop: "48px", marginLeft: "57px"}}>
+          
+            <span>Валута</span>
+            <select id="fruits" name="fruits" >
+                <option >Лв.</option>
+                <option >$</option>
+                <option >Евро</option>
                
             </select>
           </div>
@@ -116,92 +145,12 @@ const AddOutputInvoice = () => {
         </div>
      
       </div>
-            <table>
-                <thead>
-                        <tr>
-                            <th width="3%">№</th>
-                            <th width="50%">Описание на стока/услуга</th>
-                            <th width="10%">Мярка</th>
-                            <th width="10%">К-во</th>
-                            <th width="10%">Ед. цена</th>
-                            <th width="10%">Т.О.(%)</th>
-                            <th width="10%">Стойност</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                      {products.map((invoice, index) => (
-                                  <tr key={invoice.id} >
-                            
-                                  <td width="3%">{invoice.id}</td>
-                                  <td width="20%" > <input type="text" id={`name-${index}`} name="name" value={invoice.name} onChange={(e) => handleInputChange(invoice.id, e, index, "name")} /> 
-                                    </td>
-                                  <td>  
-                                  <select id="unit" name="unit">
-                                        <option value="unit">{invoice.unit}</option>
-                                    </select></td> 
-      
-                                  <td>
-                                    <input type="number" d={`quantity-${index}`} name="quantity" value={invoice.quantity} onChange={(e) => handleInputChange(invoice.id, e, index, "quantity")}></input>
-                                  </td>
-                                 
-                                  <td>
-                                  <input type="text" id={`name-${index}`} name="price" value={invoice.price} onChange={(e) => handleInputChange(invoice.id, e, index, "price")} /> </td> 
-      
-                                  <td>
-                                  <select id={`discount-${index}`} name="discount">
-                                        <option value="apple">{invoice.discount}%</option>
-                                    </select></td>  
-                                  <td>
-                                    {(invoice.price * invoice.quantity).toFixed(2)} лв.
-                                  </td>
-                                </tr>
-
-                 
-                      ))}
-
-                            <tr>
-                              <td className="bold-left "colSpan="4"></td>
-                              <td className="bold-right" colSpan="2">Субтотал</td>
-                              <td> {products.reduce((acc, invoice) => (
-                                  acc + (invoice.quantity * invoice.price) * (1 - invoice.discount / 100)
-                                ), 0).toFixed(2)} лв.</td>                           
-                            </tr>
-
-                     
-                          
-
-                            <tr>
-                              <td colSpan="4"></td>
-                              <td className="bold-right" colSpan="2">ДДС 20%</td>
-                              <td>
-                              {products.reduce((acc, invoice) => (
-                                    acc + (invoice.quantity * invoice.price) * (1 - invoice.discount / 100) * 0.20
-                                  ), 0).toFixed(2)} лв.
-                              </td>                           
-                            </tr> 
-
-                            <tr>
-                              <td colSpan="4"></td>
-                              <td className="bold-right" colSpan="2">Общо с ДДС</td>
-                              <td> 
-                              {products.reduce((acc, invoice) => (
-                                    acc + (invoice.quantity * invoice.price) * (1 - invoice.discount / 100) +
-                                      (invoice.quantity * invoice.price) * (1 - invoice.discount / 100) * 0.20
-                                  ), 0).toFixed(2)} лв.
-                              </td>                           
-                            </tr> 
-                          
-                    </tbody>
-                   
-                </table>
 
                 <div className="footer">
                 <div className="btn-add" onClick={handleClick}>
                   <span>Добавяне</span>
                   </div>
-                <div className="btn-addAndPrint">
-                  <span>Добавяне и печат</span>
-                  </div>
+
                   <Link to="/Expenses"><div className="btn-back">
                       <span>Назад</span>
                   </div></Link> 
