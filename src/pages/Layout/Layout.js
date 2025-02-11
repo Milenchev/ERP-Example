@@ -1,58 +1,49 @@
 import { Outlet, Link } from "react-router-dom";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 const Layout = () => {
+    const [activeLink, setActiveLink] = useState(null);
 
-  const [activeLink, setActiveLink] = useState(null);
+    const handleClick = (e) => {
+        const parentElement = e.target.closest("span");
+        if (parentElement) {
+            setActiveLink(parentElement);
+        }
+    };
 
-  const handleClick = (e) => {
-    const parentElement = e.target.closest('span');
-    if (parentElement) {
-      setActiveLink(parentElement);
-    }
-  };
+    return (
+        <>
+            <div className='nav'>
+                <div className='menu'>
+                    <span onClick={handleClick} className={activeLink && activeLink.textContent === "НАЧАЛО" ? "clicked" : ""}>
+                        <Link to='/'>НАЧАЛО</Link>
+                    </span>
 
-  return (
-    <>
-      <div className="nav">
+                    <span onClick={handleClick} className={activeLink && activeLink.textContent === "ДОКУМЕНТИ" ? "clicked" : ""}>
+                        <Link to='/Documents'>ДОКУМЕНТИ</Link>
+                    </span>
 
-      <div className="menu">
-          <span 
-            onClick={handleClick} 
-            className={activeLink && activeLink.textContent === 'НАЧАЛО' ? 'clicked' : ''}
-          >
-            <Link to="/">НАЧАЛО</Link>
-          </span>
+                    <span onClick={handleClick} className={activeLink && activeLink.textContent === "КЛИЕНТИ" ? "clicked" : ""}>
+                        <Link to='/clients'>КЛИЕНТИ</Link>
+                    </span>
+                    <span onClick={handleClick} className={activeLink && activeLink.textContent === "КЛИЕНТИ" ? "clicked" : ""}>
+                        <Link to='/storeHouseParts'>СКЛАД</Link>
+                    </span>
+                </div>
 
-          <span 
-            onClick={handleClick} 
-            className={activeLink && activeLink.textContent === 'ДОКУМЕНТИ' ? 'clicked' : ''}
-          >
-            <Link to="/Documents">ДОКУМЕНТИ</Link>
-          </span>
+                <div class='menu-profile'>
+                    <i class='icon bell'></i>
+                    <i class='icon icon-profile'></i>
+                    <div class='profile'>
+                        <i class='photo'></i>
+                        <span>Тодор Тодоров</span>
+                    </div>
+                </div>
+            </div>
 
-          <span 
-            onClick={handleClick} 
-            className={activeLink && activeLink.textContent === 'КЛИЕНТИ' ? 'clicked' : ''}
-          >
-            <Link to="/clients">КЛИЕНТИ</Link>
-          </span>
-        </div>
-
-        <div class="menu-profile">
-          <i class="icon bell"></i>
-          <i class="icon icon-profile"></i>
-          <div class="profile">
-              <i class="photo"></i>
-              <span>Тодор Тодоров</span>
-              
-          </div>
-        </div>
-      </div>
-
-      <Outlet />
-    </>
-  )
+            <Outlet />
+        </>
+    );
 };
 
 export default Layout;
