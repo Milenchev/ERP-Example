@@ -5,20 +5,31 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Outlet, Link } from "react-router-dom";
 
 const StoreHouseParts = () => {
-    const [storage, setStorage] = useState([]); // State to store API data
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [storages, setStorages] = useState([]);
+    const [storageItems, setStorageItems] = useState([]);
+    const [selectedStorage, setSelectedStorage] = useState(0);
+    // HTTP HANDLER VARIABLES
     const [loading, setLoading] = useState(true); // Loading state
     const [error, setError] = useState(null); // Error state
 
+    // FILTER SEARCH VARIABLE
+    const [searchTerm, setSearchTerm] = useState("");
     // Fetch data from RESTful API
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchDataStorage = async () => {
             try {
-                const response = await fetch("http://localhost:5001/storageItems");
+                const response = await fetch("http://localhost:5001/storage");
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 const data = await response.json();
-                setStorage(data.storageItems); // Store fetched data in state
+                setStorages(data.storage); // Store fetched data in state
+                if (data.storage.length > 0) {
+                    data.storage[0].selected = true;
+                    fetchStorageItems(data.storage[0].uid);
+                    setSelectedStorage(data.storages[0].uid);
+                }
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -26,7 +37,21 @@ const StoreHouseParts = () => {
             }
         };
 
-        fetchData();
+        const fetchStorageItems = async (storage_id) => {
+            try {
+                const response = await fetch("http://localhost:5001/storageItems?storage_id=" + storage_id);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+                setStorageItems(data.storageItems); // Store fetched data in state
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchDataStorage();
     }, []); //
 
     const handleDelete = async (id) => {
@@ -43,18 +68,103 @@ const StoreHouseParts = () => {
             }
 
             // Update state to remove the deleted invoice
-            setStorage((prevStorageItems) => prevStorageItems.filter((storageItem) => storageItem.uid !== id));
+            setStorages((prevStorageItems) => prevStorageItems.filter((storageItem) => storageItem.uid !== id));
         } catch (error) {
             console.error("Error deleting invoice:", error);
         }
     };
 
-    const [searchTerm, setSearchTerm] = useState("");
+    async function SwitchItemStorage(storage_id) {
+        try {
+            const response = await fetch(
+                "http://localhost:5001/updateStorageItemStorage?storage_id=" + storage_id + "&item_id=" + isModalOpen.item_id
+            );
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            // const data = await response.json();
+            RefreshStorageItems();
+            setIsModalOpen({ open: false, item_id: null });
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    }
 
-    const filterStorages = storage.filter((storage) => storage.itemName.toLowerCase().includes(searchTerm.toLowerCase()));
+    async function fetchStorageItemsOnSelect(storage_id) {
+        try {
+            const response = await fetch("http://localhost:5001/storageItems?storage_id=" + storage_id);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            var tempStorages = storages;
+            for (var si = 0; si < tempStorages.length; si++) {
+                if (tempStorages[si].uid == storage_id) {
+                    tempStorages[si].selected = true;
+                } else {
+                    tempStorages[si].selected = false;
+                }
+            }
+            setSelectedStorage(storage_id);
+            setStorages(tempStorages);
+            setStorageItems(data.storageItems); // Store fetched data in state
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    async function RefreshStorageItems() {
+        try {
+            const response = await fetch("http://localhost:5001/storageItems?storage_id=" + selectedStorage);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            setStorageItems(data.storageItems); // Store fetched data in state
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const filterStorageItems = storageItems.filter((item) => item.itemName.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    function isSelectedStorage(storage_id) {
+        for (var si = 0; si < storages.length; si++) {
+            if (storages[si].uid == storage_id) {
+                if (storages[si].selected) {
+                    return "selected";
+                }
+            }
+        }
+        return "";
+    }
 
     return (
         <div className={styles.StoreHouseParts}>
+            {isModalOpen.open && (
+                <div class='modal-holder'>
+                    <div id='myModal' class='modal' onClick={(e) => e.stopPropagation()}>
+                        <div class='modal-content'>
+                            <span class='close' onClick={(e) => setIsModalOpen({ open: false, item_id: null })} id='closeModalBtn'>
+                                &times;
+                            </span>
+                            <h2 style={{ color: "white", textAlign: "center" }}>Премести артикул в:</h2>
+                            {storages.map((storage, index) => (
+                                <span class='content' onClick={(e) => SwitchItemStorage(storage.uid)}>
+                                    {storage.storageName}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className='invoices-nav'>
                 <div className='invoices-menu'>
                     <span>
@@ -71,9 +181,17 @@ const StoreHouseParts = () => {
 
             <div class='left-menu'>
                 <div class='left-menu-storeHouse'>
-                    <span class='content-header'>Складове</span>
-                    <span class='content'>Axion Офис</span>
-                    <span class='content-default'>Хотел Есте Парк </span>
+                    {storages.map((storage, index) => (
+                        <span
+                            class='content'
+                            className={`content ${isSelectedStorage(storage.uid)}`}
+                            onClick={(e) => {
+                                fetchStorageItemsOnSelect(storage.uid);
+                            }}
+                        >
+                            {storage.storageName}
+                        </span>
+                    ))}
                 </div>
                 <Link to='/storeHouse'>
                     <span class='content-default-1'>Добави Склад</span>
@@ -89,7 +207,7 @@ const StoreHouseParts = () => {
                         ()
                     </div>
 
-                    <Link to={`/`}>
+                    <Link to={`/Add-items`}>
                         {" "}
                         <div style={{ width: "10%", marginRight: "25px" }} class='button-Add'>
                             <i class='icon-add'></i>
@@ -98,7 +216,14 @@ const StoreHouseParts = () => {
                     </Link>
                     <div class='search-holder'>
                         <i class='icon-search'></i>
-                        <input type='text' placeholder='Търсене' name='defaultInput' id='defaultInput' />
+                        <input
+                            type='text'
+                            placeholder='Търсене'
+                            name='defaultInput'
+                            id='defaultInput'
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
                     </div>
                 </div>
 
@@ -117,9 +242,9 @@ const StoreHouseParts = () => {
                             </tr>
                         </thead>
                         <tbody class='invoices-th'>
-                            {storage.map((storage, index) => (
+                            {filterStorageItems.map((storage, index) => (
                                 <tr>
-                                    <td width='5%'>{storage.uid}</td>
+                                    <td width='5%'>{index + 1}</td>
                                     <td width='10%'>{storage.itemNum}</td>
                                     <td width='20%'>{storage.itemName}</td>
                                     <td width='10%'>{storage.Availability}</td>
@@ -144,7 +269,8 @@ const StoreHouseParts = () => {
                                     <td>{storage.position}</td>
 
                                     <td class='icons'>
-                                        <i class='icon-pen'></i>
+                                        <i class='icon-pen' onClick={() => setIsModalOpen({ open: true, item_id: storage.uid })}></i>
+
                                         <Link to={``}>
                                             <i class='icon-print'></i>
                                         </Link>

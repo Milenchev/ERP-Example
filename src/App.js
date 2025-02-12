@@ -15,6 +15,7 @@ import PrintOffer from "./pages/PrintOffer/PrintOffer";
 import AddOffer from "./pages/AddOffer/AddOffer";
 import StoreHouse from "./pages/StoreHouse/StoreHouse";
 import StoreHouseParts from "./pages/StoreHouseParts/StoreHouseParts";
+import AddStoreHouseParts from "./pages/AddStoreHouseParts/AddStoreHouseParts";
 
 function App() {
     return (
@@ -58,6 +59,9 @@ function App() {
                 </Route>
                 <Route path='/storeHouseParts' element={<Layout />}>
                     <Route index element={<StoreHouseParts />} />
+                </Route>
+                <Route path='/Add-items' element={<Layout />}>
+                    <Route index element={<AddStoreHouseParts />} />
                 </Route>
             </Routes>
         </BrowserRouter>
