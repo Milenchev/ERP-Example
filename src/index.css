@@ -624,6 +624,17 @@ a{
               float: left;
             }
 
+            .icon-menu{
+              background-image: url(../public/menu.svg);
+              background-size: 20px;
+              background-repeat: no-repeat;
+              margin-top: 3px;
+              margin-left: 10px;
+              height: 20px;
+              width: 20px;
+              float: left;
+            }
+
               .icon-trash-storage{
                 background-image: url(../public/trash-bin.svg);
                 background-size: 16px;

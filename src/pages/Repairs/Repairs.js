@@ -57,7 +57,7 @@ const Repairs = () => {
             <div className='invoices-nav'>
                 <div className='invoices-menu'>
                     <span>
-                        <i className='images box'></i> <Link to=''>ПОРЪЧКИ</Link>
+                        <i className='images box'></i> <Link to='/orders'>ПОРЪЧКИ</Link>
                     </span>
                     <span>
                         <i className='images boxes'></i> <Link to='/Repairs'>РЕМОНТИ</Link>
