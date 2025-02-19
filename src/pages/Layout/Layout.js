@@ -26,8 +26,11 @@ const Layout = () => {
                     <span onClick={handleClick} className={activeLink && activeLink.textContent === "КЛИЕНТИ" ? "clicked" : ""}>
                         <Link to='/clients'>КЛИЕНТИ</Link>
                     </span>
-                    <span onClick={handleClick} className={activeLink && activeLink.textContent === "КЛИЕНТИ" ? "clicked" : ""}>
+                    <span onClick={handleClick} className={activeLink && activeLink.textContent === "СКЛАД" ? "clicked" : ""}>
                         <Link to='/storeHouseParts'>СКЛАД</Link>
+                    </span>
+                    <span onClick={handleClick} className={activeLink && activeLink.textContent === "МАГАЗИН" ? "clicked" : ""}>
+                        <Link to='/Repairs'>МАГАЗИН</Link>
                     </span>
                 </div>
 

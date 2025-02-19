@@ -16,7 +16,13 @@ const AddOutputInvoice = () => {
     const handleClick = async () => {
         try {
             var invoiceTotalValue = products
-                .reduce((acc, invoice) => acc + invoice.quantity * invoice.price * (1 - invoice.discount / 100) + invoice.quantity * invoice.price * (1 - invoice.discount / 100) * 0.2, 0)
+                .reduce(
+                    (acc, invoice) =>
+                        acc +
+                        invoice.quantity * invoice.price * (1 - invoice.discount / 100) +
+                        invoice.quantity * invoice.price * (1 - invoice.discount / 100) * 0.2,
+                    0
+                )
                 .toFixed(2);
             const response = await fetch("http://localhost:5001/addOutgoingInvoice", {
                 method: "POST",
@@ -78,12 +84,26 @@ const AddOutputInvoice = () => {
                     <div className='row'>
                         <div className='col-3 input-row'>
                             <span>Клиент</span>
-                            <input className='input-label' type='text' placeholder='' name='defaultInput' value={clientName} onChange={(e) => setClientName(e.target.value)} />
+                            <input
+                                className='input-label'
+                                type='text'
+                                placeholder=''
+                                name='defaultInput'
+                                value={clientName}
+                                onChange={(e) => setClientName(e.target.value)}
+                            />
                         </div>
 
                         <div className='col-3 input-row'>
                             <span>МОЛ</span>
-                            <input className='input-label' type='text' placeholder='' name='defaultInput' value={owner} onChange={(e) => setOwner(e.target.value)} />
+                            <input
+                                className='input-label'
+                                type='text'
+                                placeholder=''
+                                name='defaultInput'
+                                value={owner}
+                                onChange={(e) => setOwner(e.target.value)}
+                            />
                         </div>
 
                         <div className='col-2 input-row'>
@@ -96,12 +116,26 @@ const AddOutputInvoice = () => {
 
                         <div className='col-2 input-row'>
                             <span>Фактура номер</span>
-                            <input className='input-label' type='text' placeholder='' name='defaultInput' value={faxNum} onChange={(e) => setFaxNum(e.target.value)} />
+                            <input
+                                className='input-label'
+                                type='text'
+                                placeholder=''
+                                name='defaultInput'
+                                value={faxNum}
+                                onChange={(e) => setFaxNum(e.target.value)}
+                            />
                         </div>
 
                         <div className='col-2 input-row'>
                             <span>Дата на фактура</span>
-                            <input className='input-label' type='text' placeholder='' name='defaultInput' value={faxDate} onChange={(e) => setFaxDate(e.target.value)} />
+                            <input
+                                className='input-label'
+                                type='text'
+                                placeholder=''
+                                name='defaultInput'
+                                value={faxDate}
+                                onChange={(e) => setFaxDate(e.target.value)}
+                            />
                         </div>
                     </div>
                 </div>
@@ -136,7 +170,14 @@ const AddOutputInvoice = () => {
                                 <td width='3%'>{invoice.id}</td>
                                 <td width='20%'>
                                     {" "}
-                                    <input class='width-90' type='text' id={`name-${index}`} name='name' value={invoice.name} onChange={(e) => handleInputChange(invoice.id, e, index, "name")} />
+                                    <input
+                                        class='width-90'
+                                        type='text'
+                                        id={`name-${index}`}
+                                        name='name'
+                                        value={invoice.name}
+                                        onChange={(e) => handleInputChange(invoice.id, e, index, "name")}
+                                    />
                                 </td>
                                 <td>
                                     <select id='unit' name='unit'>
@@ -145,11 +186,23 @@ const AddOutputInvoice = () => {
                                 </td>
 
                                 <td>
-                                    <input type='number' d={`quantity-${index}`} name='quantity' value={invoice.quantity} onChange={(e) => handleInputChange(invoice.id, e, index, "quantity")}></input>
+                                    <input
+                                        type='number'
+                                        d={`quantity-${index}`}
+                                        name='quantity'
+                                        value={invoice.quantity}
+                                        onChange={(e) => handleInputChange(invoice.id, e, index, "quantity")}
+                                    ></input>
                                 </td>
 
                                 <td>
-                                    <input type='text' id={`name-${index}`} name='price' value={invoice.price} onChange={(e) => handleInputChange(invoice.id, e, index, "price")} />{" "}
+                                    <input
+                                        type='text'
+                                        id={`name-${index}`}
+                                        name='price'
+                                        value={invoice.price}
+                                        onChange={(e) => handleInputChange(invoice.id, e, index, "price")}
+                                    />{" "}
                                 </td>
 
                                 <td>
@@ -166,7 +219,13 @@ const AddOutputInvoice = () => {
                             <td className='bold-right' colSpan='2'>
                                 Субтотал
                             </td>
-                            <td> {products.reduce((acc, invoice) => acc + invoice.quantity * invoice.price * (1 - invoice.discount / 100), 0).toFixed(2)} лв.</td>
+                            <td>
+                                {" "}
+                                {products
+                                    .reduce((acc, invoice) => acc + invoice.quantity * invoice.price * (1 - invoice.discount / 100), 0)
+                                    .toFixed(2)}{" "}
+                                лв.
+                            </td>
                         </tr>
 
                         <tr>
@@ -174,7 +233,12 @@ const AddOutputInvoice = () => {
                             <td className='bold-right' colSpan='2'>
                                 ДДС 20%
                             </td>
-                            <td>{products.reduce((acc, invoice) => acc + invoice.quantity * invoice.price * (1 - invoice.discount / 100) * 0.2, 0).toFixed(2)} лв.</td>
+                            <td>
+                                {products
+                                    .reduce((acc, invoice) => acc + invoice.quantity * invoice.price * (1 - invoice.discount / 100) * 0.2, 0)
+                                    .toFixed(2)}{" "}
+                                лв.
+                            </td>
                         </tr>
 
                         <tr>
@@ -185,7 +249,10 @@ const AddOutputInvoice = () => {
                             <td>
                                 {products
                                     .reduce(
-                                        (acc, invoice) => acc + invoice.quantity * invoice.price * (1 - invoice.discount / 100) + invoice.quantity * invoice.price * (1 - invoice.discount / 100) * 0.2,
+                                        (acc, invoice) =>
+                                            acc +
+                                            invoice.quantity * invoice.price * (1 - invoice.discount / 100) +
+                                            invoice.quantity * invoice.price * (1 - invoice.discount / 100) * 0.2,
                                         0
                                     )
                                     .toFixed(2)}{" "}

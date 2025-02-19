@@ -16,6 +16,9 @@ import AddOffer from "./pages/AddOffer/AddOffer";
 import StoreHouse from "./pages/StoreHouse/StoreHouse";
 import StoreHouseParts from "./pages/StoreHouseParts/StoreHouseParts";
 import AddStoreHouseParts from "./pages/AddStoreHouseParts/AddStoreHouseParts";
+import Repairs from "./pages/Repairs/Repairs";
+import AddRepairs from "./pages/AddRepairs/AddRepairs";
+import WorkRepair from "./pages/WorkRepair/WorkRepair";
 
 function App() {
     return (
@@ -62,6 +65,15 @@ function App() {
                 </Route>
                 <Route path='/Add-items' element={<Layout />}>
                     <Route index element={<AddStoreHouseParts />} />
+                </Route>
+                <Route path='/Repairs' element={<Layout />}>
+                    <Route index element={<Repairs />} />
+                </Route>
+                <Route path='/add-repair' element={<Layout />}>
+                    <Route index element={<AddRepairs />} />
+                </Route>
+                <Route path='/work-repair' element={<Layout />}>
+                    <Route index element={<WorkRepair />} />
                 </Route>
             </Routes>
         </BrowserRouter>

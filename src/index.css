@@ -601,6 +601,29 @@ a{
               float: left;
             }
 
+            .icon-delete{
+              background-image: url(../public/remove.svg);
+              background-size: 30px;
+              background-repeat: no-repeat;
+              margin-top: 5px;
+              margin-left: 20px;
+              height: 30px;
+              width: 30px;
+              float: left;
+            }
+
+
+            .icon-work{
+              background-image: url(../public/support.svg);
+              background-size: 16px;
+              background-repeat: no-repeat;
+              margin-top: 7px;
+              margin-right: 5px;
+              height: 18px;
+              width: 18px;
+              float: left;
+            }
+
               .icon-trash-storage{
                 background-image: url(../public/trash-bin.svg);
                 background-size: 16px;

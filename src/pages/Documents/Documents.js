@@ -67,24 +67,21 @@ const Documents = () => {
         <div className={styles.Documents}>
             <div className='invoices-nav'>
                 <div className='invoices-menu'>
-                    <span className={activeLink && activeLink.textContent === "ПРОДАЖБИ" ? "clicked" : ""} onClick={handleClick}>
+                    <span onClick={handleClick} className={activeLink && activeLink.textContent === "ПРОДАЖБИ" ? "clicked" : ""}>
                         <i className='images sales'></i> <Link to='/Documents'>ПРОДАЖБИ</Link>
                     </span>
 
-                    <span className={activeLink === "/Expenses" ? "clicked" : ""} onClick={handleClick}>
+                    <span onClick={handleClick} className={activeLink && activeLink.textContent === "РАЗХОДИ" ? "clicked" : ""}>
                         <i className='images package'></i> <Link to='/Expenses'>РАЗХОДИ</Link>
                     </span>
                     <span onClick={handleClick}>
-                        {" "}
                         <i className='images repeat'></i> АВТОМАТИЧНИ ТАКСУВАНИЯ
                     </span>
-                    <span>
-                        {" "}
+                    <span onClick={handleClick} className={activeLink && activeLink.textContent === "ОФЕРТИ" ? "clicked" : ""}>
                         <i className='images mail'></i>
                         <Link to='/offers'>ОФЕРТИ</Link>
                     </span>
                     <span onClick={handleClick}>
-                        {" "}
                         <i className='images mail'></i> ТОВАРИТЕЛНИЦИ
                     </span>
                 </div>
@@ -118,7 +115,14 @@ const Documents = () => {
                     </Link>
                     <div class='search-holder'>
                         <i class='icon-search'></i>
-                        <input type='text' placeholder='Търсене' name='defaultInput' id='defaultInput' value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                        <input
+                            type='text'
+                            placeholder='Търсене'
+                            name='defaultInput'
+                            id='defaultInput'
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
                     </div>
                 </div>
 
@@ -141,7 +145,15 @@ const Documents = () => {
                                 <tr>
                                     <td width='3%'>{index + 1}</td>
                                     <td width='20%'>{invoice.date}</td>
-                                    <td>{invoice.type === 0 ? <span> Фактура</span> : invoice.type === 1 ? <span> Проформа фактура</span> : <h1>Unknown Status</h1>}</td>
+                                    <td>
+                                        {invoice.type === 0 ? (
+                                            <span> Фактура</span>
+                                        ) : invoice.type === 1 ? (
+                                            <span> Проформа фактура</span>
+                                        ) : (
+                                            <h1>Unknown Status</h1>
+                                        )}
+                                    </td>
                                     <td>{invoice.client}</td>
                                     <td>{invoice.invoiceValue} лв</td>
                                     <td>
