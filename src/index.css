@@ -47,6 +47,11 @@ code {
         transition: all ease-in-out 1s;
       }
 
+      .clicked{
+        color: blue; /* Example style */
+        font-weight: bold;
+      }
+
 a{
   text-decoration: none!important;
 }

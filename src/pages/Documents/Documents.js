@@ -2,9 +2,14 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import styles from "./Documents.module.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const Documents = () => {
+    const location = useLocation(); // Get current location (path)
+
+    // Check if the current path matches the link
+    const isActive = (path) => location.pathname === path;
     const [outgoingInvoices, setOutgoingInvoices] = useState([]); // State to store API data
     const [loading, setLoading] = useState(true); // Loading state
     const [error, setError] = useState(null); // Error state
@@ -55,34 +60,29 @@ const Documents = () => {
 
     const filterOutgoingInvoices = outgoingInvoices.filter((invoice) => invoice.client.toLowerCase().includes(searchTerm.toLowerCase()));
 
-    const handleClick = (e) => {
-        const parentElement = e.target.closest("span");
-        if (parentElement) {
-            setActiveLink(parentElement);
-            console.log(activeLink);
-        }
-    };
-
     return (
         <div className={styles.Documents}>
             <div className='invoices-nav'>
                 <div className='invoices-menu'>
-                    <span onClick={handleClick} className={activeLink && activeLink.textContent === "ПРОДАЖБИ" ? "clicked" : ""}>
-                        <i className='images sales'></i> <Link to='/Documents'>ПРОДАЖБИ</Link>
+                    <span className={isActive("/Documents") ? "clicked" : ""}>
+                        <i className='images sales'></i>
+                        <NavLink to='/Documents'>ПРОДАЖБИ</NavLink>
                     </span>
-
-                    <span onClick={handleClick} className={activeLink && activeLink.textContent === "РАЗХОДИ" ? "clicked" : ""}>
-                        <i className='images package'></i> <Link to='/Expenses'>РАЗХОДИ</Link>
+                    <span className={isActive("/Expenses") ? "clicked" : ""}>
+                        <i className='images package'></i>
+                        <NavLink to='/Expenses'>РАЗХОДИ</NavLink>
                     </span>
-                    <span onClick={handleClick}>
-                        <i className='images repeat'></i> АВТОМАТИЧНИ ТАКСУВАНИЯ
+                    <span className={isActive("/auto-invoice") ? "clicked" : ""}>
+                        <i className='images repeat'></i>
+                        <NavLink to='/auto-invoice'>АВТОМАТИЧНИ ТАКСУВАНИЯ</NavLink>
                     </span>
-                    <span onClick={handleClick} className={activeLink && activeLink.textContent === "ОФЕРТИ" ? "clicked" : ""}>
+                    <span className={isActive("/offers") ? "clicked" : ""}>
                         <i className='images mail'></i>
-                        <Link to='/offers'>ОФЕРТИ</Link>
+                        <NavLink to='/offers'>ОФЕРТИ</NavLink>
                     </span>
-                    <span onClick={handleClick}>
-                        <i className='images mail'></i> ТОВАРИТЕЛНИЦИ
+                    <span className={isActive("/waybills") ? "clicked" : ""}>
+                        <i className='images mail'></i>
+                        <NavLink to='/waybills'>ТОВАРИТЕЛНИЦИ</NavLink>
                     </span>
                 </div>
             </div>
@@ -199,6 +199,12 @@ const Documents = () => {
                                     </td>
                                 </tr>
                             ))}
+
+                            {filterOutgoingInvoices.length === 0 && (
+                                <tr>
+                                    <td colspan='8'>Няма налични резултати</td>
+                                </tr>
+                            )}
                         </tbody>
                         <tfoot>
                             <tr>

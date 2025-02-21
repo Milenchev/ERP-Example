@@ -2,13 +2,96 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import styles from "./AddOrder.module.css";
 import { Outlet, Link } from "react-router-dom";
+import Orders from "../Orders/Orders";
 
 const AddOrder = () => {
+    const [client, setClient] = useState("");
+    const [dateApplied, setDateApplied] = useState(0);
+    const [orderAdded, setOrderAdded] = useState([{ id: 1, client: "", dateApplied: 0 }]);
+    const [itemAdded, setItemAdded] = useState([{ id: 1, productName: "", unit: 0, quantity: 0, price: 0 }]);
+
+    const [items, setItems] = useState([]); // State to store API data
+    const [selectedItem, setSelectedItem] = useState(0);
+    const [loading, setLoading] = useState(true); // Loading state
+    const [error, setError] = useState(null); // Error state
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch("http://localhost:5001/getAllStorageItems");
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+
+                setItems(data.storageItems); // Store fetched data in state
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const [searchTerm, setSearchTerm] = useState("");
+
+    const filterStorageItems = items.filter((item) => String(item.itemNum).toLowerCase().includes(searchTerm.toLowerCase()));
+
+    const handleClick = async () => {
+        try {
+            const response = await fetch("http://localhost:5001/addOrder", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    orders: {
+                        client: client,
+                        dateApplied: dateApplied,
+                        orderItems: itemAdded,
+                    },
+                }), // Send your data here
+            });
+
+            const result = await response.json();
+            window.history.go(-1);
+        } catch (error) {
+            console.error("Error:", error); // Handle errors
+        }
+    };
+
+    const handleInputChange = (id, e, index, key) => {
+        // Update the product details
+        let updatedItem = itemAdded.map((item) => (item.id === id ? { ...item, [key]: e.target.value } : item));
+
+        // Check if it's the last row and input is not empty
+        if (index === itemAdded.length - 1 && e.target.value !== "") {
+            updatedItem = [
+                ...updatedItem,
+                {
+                    id: itemAdded.length + 1,
+                    productName: "",
+                    unit: 0,
+                    quantity: 0,
+                    price: 0,
+                    productOrderId: 0,
+                },
+            ];
+        }
+
+        setItemAdded(updatedItem);
+    };
+
+    const handleDeleteRow = (id) => {
+        setOrderAdded(orderAdded.filter((item) => item.id !== id));
+    };
     return (
         <div className={styles.AddOrder}>
             <div className='add-fax-holder'>
                 <div className='add-fax-header'>
-                    <span>Добавяне на изходна фактура (3000001618)</span>
+                    <span>Добавяне на поръчка</span>
                 </div>
 
                 <div className='input-holder'>
@@ -21,6 +104,8 @@ const AddOrder = () => {
                                 type='text'
                                 placeholder=''
                                 name='defaultInput'
+                                value={client}
+                                onChange={(e) => setClient(e.target.value)}
                             />
                         </div>
 
@@ -29,9 +114,11 @@ const AddOrder = () => {
                             <input
                                 style={{ float: "left", marginLeft: "40px", width: "90%", height: "30px" }}
                                 className='input-label'
-                                type='text'
+                                type='date'
                                 placeholder=''
                                 name='defaultInput'
+                                value={dateApplied}
+                                onChange={(e) => setDateApplied(e.target.value)}
                             />
                         </div>
                     </div>
@@ -50,29 +137,44 @@ const AddOrder = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td width='3%'></td>
-                            <td width='20%'>
-                                {" "}
-                                <input class='width-90' type='text' name='name' />
-                            </td>
-                            <td>
-                                <select id='unit' name='unit'>
-                                    <option value='unit'></option>
-                                </select>
-                            </td>
+                        {itemAdded.map((item, index) => (
+                            <tr>
+                                <td width='3%'>{item.id}</td>
+                                <td width='20%'>
+                                    {" "}
+                                    <select
+                                        class='width-90'
+                                        type='text'
+                                        name='itemName'
+                                        value={item.productName}
+                                        onChange={(e) => handleInputChange(item.id, e, index, "productName")}
+                                        style={{ width: "100%", height: "30px" }}
+                                    >
+                                        <option value=''>Изберете продукт</option>
+                                        {filterStorageItems.map((item) => (
+                                            <option key={item.id} value={item.id}>
+                                                {item.itemName}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </td>
+                                <td>
+                                    <select id='unit' name='unit'>
+                                        <option value='unit'></option>
+                                    </select>
+                                </td>
 
-                            <td>
-                                <input type='number' name='quantity'></input>
-                            </td>
+                                <td>
+                                    <input type='number' name='quantity'></input>
+                                </td>
 
-                            <td>
-                                <input type='text' name='price' />{" "}
-                            </td>
+                                <td>
+                                    <input type='text' name='price' />{" "}
+                                </td>
 
-                            <td>лв.</td>
-                        </tr>
-
+                                <td>лв.</td>
+                            </tr>
+                        ))}
                         <tr>
                             <td className='bold-left ' colSpan='3'></td>
                             <td className='bold-right' colSpan='2'>
@@ -100,7 +202,7 @@ const AddOrder = () => {
                 </table>
 
                 <div className='footer'>
-                    <div className='btn-add'>
+                    <div className='btn-add' onClick={handleClick}>
                         <span>Добавяне</span>
                     </div>
 

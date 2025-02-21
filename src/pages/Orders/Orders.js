@@ -31,6 +31,26 @@ const Orders = () => {
     const [searchTerm, setSearchTerm] = useState("");
 
     const filterOrders = orders.filter((order) => order.client.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    const handleDelete = async (id) => {
+        if (!window.confirm("Сигурни ли сте, че искате да изтриете тази поръчка?")) {
+            return;
+        }
+        try {
+            const response = await fetch(`http://localhost:5001/deleteOrder?id=${id}`, {
+                method: "DELETE",
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            // Update state to remove the deleted invoice
+            setOrders((prevOrder) => prevOrder.filter((order) => order.uid !== id));
+        } catch (error) {
+            console.error("Error deleting invoice:", error);
+        }
+    };
     return (
         <div className={styles.Orders}>
             <div className='invoices-nav'>
@@ -94,7 +114,7 @@ const Orders = () => {
                                                 НЕИЗПРАТЕНА
                                             </span>
                                         ) : (
-                                            <h1>Unknown Status</h1>
+                                            <p>Очаква статус</p>
                                         )}
                                     </td>
 
@@ -102,6 +122,15 @@ const Orders = () => {
                                         <Link to=''>
                                             <i className='icon-menu'></i>
                                         </Link>
+                                        <i
+                                            className='icon-trash'
+                                            onClick={() => handleDelete(order.uid)}
+                                            style={{
+                                                cursor: "pointer",
+                                                marginLeft: "15px",
+                                                marginTop: "5px",
+                                            }}
+                                        ></i>
                                     </td>
                                 </tr>
                             ))}

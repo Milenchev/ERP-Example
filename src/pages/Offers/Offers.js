@@ -72,7 +72,7 @@ const Offers = () => {
                     </span>
                     <span onClick={handleClick}>
                         {" "}
-                        <i className='images repeat'></i> АВТОМАТИЧНИ ТАКСУВАНИЯ
+                        <i className='images repeat'></i> <Link to='/auto-invoice'>АВТОМАТИЧНИ ТАКСУВАНИЯ</Link>
                     </span>
                     <span>
                         {" "}
@@ -126,7 +126,15 @@ const Offers = () => {
                                     <td width='20%'>{offer.heading}</td>
                                     <td width='20%'>{offer.clientName} </td>
                                     <td width='10%'>{offer.price} лв.</td>
-                                    <td width='10%'>{offer.typeOfOffer === 0 ? <span>Обект</span> : offer.state === 1 ? <span>Проект</span> : <h1>Unknown Status</h1>}</td>
+                                    <td width='10%'>
+                                        {offer.typeOfOffer === 0 ? (
+                                            <span>Обект</span>
+                                        ) : offer.state === 1 ? (
+                                            <span>Проект</span>
+                                        ) : (
+                                            <h1>Unknown Status</h1>
+                                        )}
+                                    </td>
 
                                     <td width='15%'>
                                         {offer.state === 0 ? (

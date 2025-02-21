@@ -31,6 +31,7 @@ const StoreHouseParts = () => {
                 if (data.storage.length > 0) {
                     data.storage[0].selected = true;
                     setSelectedStorage(data.storage[0].uid); // Fixing this line to reference 'storages'
+                    // fetchStorageItemsOnSelect(data.storage[0].uid);
                 }
             } catch (err) {
                 setError(err.message);

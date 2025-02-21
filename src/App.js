@@ -21,6 +21,8 @@ import AddRepairs from "./pages/AddRepairs/AddRepairs";
 import WorkRepair from "./pages/WorkRepair/WorkRepair";
 import Orders from "./pages/Orders/Orders";
 import AddOrder from "./pages/AddOrder/AddOrder";
+import AutoInvoices from "./pages/AutoInvoices/AutoInvoices";
+import AutoInvoiceAdd from "./pages/AutoInvoiceAdd/AutoInvoiceAdd";
 
 function App() {
     return (
@@ -82,6 +84,12 @@ function App() {
                 </Route>
                 <Route path='/add-order' element={<Layout />}>
                     <Route index element={<AddOrder />} />
+                </Route>
+                <Route path='/auto-invoice' element={<Layout />}>
+                    <Route index element={<AutoInvoices />} />
+                </Route>
+                <Route path='/auto-invoice-add' element={<Layout />}>
+                    <Route index element={<AutoInvoiceAdd />} />
                 </Route>
             </Routes>
         </BrowserRouter>

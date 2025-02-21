@@ -4,14 +4,45 @@ import styles from "./AddOutputInvoice.module.css";
 import { Outlet, Link } from "react-router-dom";
 
 const AddOutputInvoice = () => {
+    const [invoiceNum, setInvoiceNum] = useState("3000000001");
     const [clientName, setClientName] = useState("");
+    const [clientId, setClientId] = useState(0);
     const [owner, setOwner] = useState("");
     const [typeDoc, setTypeDoc] = useState("0");
-    const [faxNum, setFaxNum] = useState("");
     const [faxDate, setFaxDate] = useState("");
     const [paymentType, setPaymentType] = useState("0");
     const [responseProducts, setResponseProducts] = useState([]);
     const [products, setProducts] = useState([{ id: 1, name: "", unit: "бр.", quantity: 0, price: 0, discount: 0 }]);
+
+    const [clients, setClients] = useState([]);
+    const [selectedClient, setSelectedClient] = useState("");
+    const [loading, setLoading] = useState(true); // Loading state
+    const [error, setError] = useState(null); // Error state
+    const [currentDate, setCurrentDate] = useState(new Date());
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch("http://localhost:5001/clients");
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+                setClients(data.clients); // Store fetched data in state
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        GetMaximumInvoiceNum();
+        fetchData();
+    }, []); // Runs once when the component mounts
+
+    // const [searchTerm, setSearchTerm] = useState("");
+
+    // const filterClients = client.filter((client) => client.clientName.toLowerCase().includes(searchTerm.toLowerCase()));
 
     const handleClick = async () => {
         try {
@@ -31,11 +62,12 @@ const AddOutputInvoice = () => {
                 },
                 body: JSON.stringify({
                     invoice: {
+                        invoiceNum: invoiceNum,
                         client: clientName,
+                        clientId: clientId,
                         ownerName: owner,
                         type: typeDoc,
-                        fax: faxNum,
-                        date: faxDate,
+                        date: currentDate.toLocaleDateString(),
                         typeOfPayment: paymentType,
                         total_value: invoiceTotalValue,
                         products: products,
@@ -73,6 +105,48 @@ const AddOutputInvoice = () => {
         setProducts(updatedProducts);
     };
 
+    const SetClient = (client_name) => {
+        setClientName(client_name);
+        setSelectedClient(client_name);
+        for (var ci = 0; ci < clients.length; ci++) {
+            if (clients[ci].clientName == client_name) {
+                setClientId(clients[ci].uid);
+                setOwner(clients[ci].mol);
+                break;
+            }
+        }
+    };
+
+    const GetMaximumInvoiceNum = async () => {
+        try {
+            const response = await fetch("http://localhost:5001/getLastInvoiceNum?invoice_type=" + typeDoc);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            if (data["invoice_num"] == "none") {
+                if (typeDoc == 0) {
+                    setInvoiceNum("3000000001");
+                } else {
+                    setInvoiceNum("2000000001");
+                }
+            } else {
+                setInvoiceNum(parseInt(data["invoice_num"]) + 1);
+            }
+            // setClients(data.clients); // Store fetched data in state
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (typeDoc) {
+            GetMaximumInvoiceNum();
+        }
+    }, [typeDoc]);
+
     return (
         <div className={styles.AddOutputInvoice}>
             <div className='add-fax-holder'>
@@ -84,14 +158,21 @@ const AddOutputInvoice = () => {
                     <div className='row'>
                         <div className='col-3 input-row'>
                             <span>Клиент</span>
-                            <input
-                                className='input-label'
+                            <select
+                                class='width-90'
                                 type='text'
-                                placeholder=''
-                                name='defaultInput'
-                                value={clientName}
-                                onChange={(e) => setClientName(e.target.value)}
-                            />
+                                name='itemName'
+                                value={selectedClient}
+                                onChange={(e) => SetClient(e.target.value)}
+                                style={{ width: "90%", height: "30px" }}
+                            >
+                                <option value=''>Изберете клиент</option>
+                                {clients.map((client) => (
+                                    <option key={client.id} value={client.id}>
+                                        {client.clientName}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
 
                         <div className='col-3 input-row'>
@@ -116,14 +197,7 @@ const AddOutputInvoice = () => {
 
                         <div className='col-2 input-row'>
                             <span>Фактура номер</span>
-                            <input
-                                className='input-label'
-                                type='text'
-                                placeholder=''
-                                name='defaultInput'
-                                value={faxNum}
-                                onChange={(e) => setFaxNum(e.target.value)}
-                            />
+                            <input className='input-label' type='text' placeholder='' name='defaultInput' disabled value={invoiceNum} />
                         </div>
 
                         <div className='col-2 input-row'>
@@ -133,8 +207,9 @@ const AddOutputInvoice = () => {
                                 type='text'
                                 placeholder=''
                                 name='defaultInput'
-                                value={faxDate}
-                                onChange={(e) => setFaxDate(e.target.value)}
+                                disabled
+                                value={currentDate.toLocaleDateString()}
+                                // onChange={(e) => setFaxDate(e.target.value)}
                             />
                         </div>
                     </div>
@@ -206,9 +281,14 @@ const AddOutputInvoice = () => {
                                 </td>
 
                                 <td>
-                                    <select id={`discount-${index}`} name='discount'>
-                                        <option value='apple'>{invoice.discount}%</option>
-                                    </select>
+                                    <input
+                                        type='text'
+                                        style={{ width: "60%" }}
+                                        id={`discount-${index}`}
+                                        name='discount'
+                                        value={invoice.discount}
+                                        onChange={(e) => handleInputChange(invoice.id, e, index, "discount")}
+                                    />{" "}
                                 </td>
                                 <td>{(invoice.price * invoice.quantity).toFixed(2)} лв.</td>
                             </tr>
