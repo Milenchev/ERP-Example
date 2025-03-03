@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import styles from "./AddOutputInvoice.module.css";
 import { Outlet, Link } from "react-router-dom";
 
@@ -9,9 +8,7 @@ const AddOutputInvoice = () => {
     const [clientId, setClientId] = useState(0);
     const [owner, setOwner] = useState("");
     const [typeDoc, setTypeDoc] = useState("0");
-    const [faxDate, setFaxDate] = useState("");
     const [paymentType, setPaymentType] = useState("0");
-    const [responseProducts, setResponseProducts] = useState([]);
     const [products, setProducts] = useState([{ id: 1, name: "", unit: "бр.", quantity: 0, price: 0, discount: 0 }]);
 
     const [clients, setClients] = useState([]);
@@ -39,10 +36,6 @@ const AddOutputInvoice = () => {
         GetMaximumInvoiceNum();
         fetchData();
     }, []); // Runs once when the component mounts
-
-    // const [searchTerm, setSearchTerm] = useState("");
-
-    // const filterClients = client.filter((client) => client.clientName.toLowerCase().includes(searchTerm.toLowerCase()));
 
     const handleClick = async () => {
         try {

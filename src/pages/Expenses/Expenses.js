@@ -2,12 +2,23 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import styles from "./Expenses.module.css";
 import { Outlet, Link } from "react-router-dom";
+import Table from "../../components/Table";
 
 const Expenses = () => {
     const [incomingInvoices, setIncomingInvoices] = useState([]); // State to store API data
     const [loading, setLoading] = useState(true); // Loading state
     const [error, setError] = useState(null); // Error state
     const totalIncomingValue = incomingInvoices.reduce((sum, invoice) => sum + invoice.invoiceValue, 0);
+
+    const columns = [
+        { header: "Номер", key: "index", width: "3%" },
+        { header: "Дата на фактурата", key: "date" },
+        { header: "Доставчик", key: "supplier" },
+        { header: "Стойност", key: "invoiceValue" },
+        { header: "Дата на изтичане", key: "expDate" },
+        { header: "Статус", key: "State" },
+        { header: "Действия", key: "actions" },
+    ];
 
     // Fetch data from RESTful API
     useEffect(() => {
@@ -32,6 +43,38 @@ const Expenses = () => {
     const [searchTerm, setSearchTerm] = useState("");
 
     const filterIncomingInvoices = incomingInvoices.filter((invoice) => invoice.supplier.toLowerCase().includes(searchTerm.toLowerCase()));
+    const tableData = filterIncomingInvoices.map((invoice, index) => ({
+        index: index + 1,
+        ...invoice,
+        State:
+            invoice.State === 0 ? (
+                <span className='badge-waiting'>ЧАКА ПЛАЩАНЕ</span>
+            ) : invoice.State === 1 ? (
+                <span className='badge-paid'>ПЛАТЕНА</span>
+            ) : invoice.State === 2 ? (
+                <span className='badge-failed'>ПРОПУСНАТО ПЛАЩАНЕ</span>
+            ) : (
+                <h1>Unknown Status</h1>
+            ),
+
+        actions: (
+            <div className='icons'>
+                <i className='icon-pen'></i>
+
+                <i className='icon-print'></i>
+
+                <i className='icon-bag'></i>
+                <i
+                    className='icon-trash'
+                    onClick={() => handleDelete(invoice.uid)}
+                    style={{
+                        cursor: "pointer",
+                        color: "red",
+                    }}
+                ></i>
+            </div>
+        ),
+    }));
 
     const handleDelete = async (id) => {
         if (!window.confirm("Сигурни ли сте, че искате да изтриете тази фактура?")) {
@@ -107,55 +150,12 @@ const Expenses = () => {
                 </div>
 
                 <div className='invoices-table'>
+                    <div className='invoices-table'>
+                        <div className='invoices-table'>
+                            <Table data={tableData} columns={columns} showActions={true} onDelete={handleDelete} />
+                        </div>
+                    </div>
                     <table>
-                        <thead>
-                            <tr>
-                                <th>Номер</th>
-                                <th>Дата на фактурата</th>
-                                <th>Доставчик</th>
-                                <th>Стойност</th>
-                                <th>Дата на изтичане</th>
-                                <th>Статус</th>
-                                <th>Действие</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filterIncomingInvoices.slice(0, 10).map((invoice, index) => (
-                                <tr>
-                                    <td>{index + 1}</td>
-                                    <td>{invoice.date}</td>
-                                    <td>{invoice.supplier}</td>
-                                    <td>{invoice.invoiceValue} лв</td>
-                                    <td>{invoice.expDate}</td>
-
-                                    <td>
-                                        {invoice.State === 0 ? (
-                                            <span className='badge-waiting'>ЧАКА ПЛАЩАНЕ</span>
-                                        ) : invoice.State === 1 ? (
-                                            <span className='badge-paid'>ПЛАТЕНА</span>
-                                        ) : invoice.State === 2 ? (
-                                            <span className='badge-failed'>ПРОПУСНАТО ПЛАЩАНЕ</span>
-                                        ) : (
-                                            <h1>Unknown Status</h1>
-                                        )}
-                                    </td>
-
-                                    <td>
-                                        <i className='icon-pen'></i>
-                                        <i className='icon-print'></i>
-                                        <i className='icon-bag'></i>
-                                        <i
-                                            className='icon-trash'
-                                            onClick={() => handleDelete(invoice.uid)}
-                                            style={{
-                                                cursor: "pointer",
-                                                color: "red",
-                                            }}
-                                        ></i>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
                         <tfoot>
                             <tr>
                                 <td colSpan='6' style={{ textAlign: "left" }}>

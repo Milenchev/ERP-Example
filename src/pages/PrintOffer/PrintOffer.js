@@ -13,7 +13,6 @@ const PrintOffer = () => {
     const [offerInfo, setOfferInfo] = useState({});
     const [totalValue, setTotalValue] = useState(0);
 
-    const paddedOfferId = offerId ? offerId.padStart(10, "0") : "";
     var print_once = false;
     useEffect(() => {
         const fetchData = async () => {

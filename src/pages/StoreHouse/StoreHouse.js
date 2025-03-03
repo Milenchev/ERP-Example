@@ -20,10 +20,7 @@ const StoreHouse = () => {
                     0
                 )
                 .toFixed(2);
-            // let date_split = faxDate.split(".");
-            // let exp_date = new Date(date_split[1] + "." + date_split[0] + "." + date_split[2]);
-            // exp_date.setDate(exp_date.getDate() + 15);
-            // let exp_date_format = exp_date.getDate() + "." + (exp_date.getMonth() + 1) + "." + exp_date.getFullYear();
+
             const response = await fetch("http://localhost:5001/addStorage", {
                 method: "POST",
                 headers: {
@@ -42,24 +39,6 @@ const StoreHouse = () => {
         } catch (error) {
             console.error("Error:", error); // Handle errors
         }
-    };
-
-    const handleInputChange = (id, e, index, key) => {
-        // Update the product details
-        let updatedStorages = item.map((item) => (item.id === id ? { ...item, [key]: e.target.value } : item));
-
-        // Check if it's the last row and input is not empty
-        if (index === item.length - 1 && e.target.value !== "") {
-            updatedStorages = [
-                ...updatedStorages,
-                {
-                    id: item.length + 1,
-                    storageName: storageName,
-                },
-            ];
-        }
-
-        setUpdatedStorages(updatedStorages);
     };
 
     return (

@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import styles from "./StoreHouseParts.module.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Outlet, Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
 const StoreHouseParts = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);

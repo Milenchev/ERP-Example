@@ -35,11 +35,6 @@ const Home = () => {
     const totalDebtToUs = outgoingInvoices.filter((inv) => inv.invoiceState != 1).reduce((sum, inv) => sum + inv.invoiceValue, 0);
     const totalDebtToSuppliers = incomingInvoices.filter((inv) => inv.invoiceState != 1).reduce((sum, inv) => sum + inv.invoiceValue, 0);
 
-    const shoot = (tst) => {
-        alert("Great " + tst);
-        setTest(5000); // Updating state without directly modifying it
-    };
-
     return (
         <div className={styles.Home}>
             <div className='data'>

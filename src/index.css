@@ -812,7 +812,7 @@ a{
   .input-holder{
     float: left;
     width: 100%;
-    height: 100px;
+    height: auto;
   }
 
     .addItem-holder{
@@ -1238,4 +1238,32 @@ a{
     text-decoration: none;
   }
 
+  .file-title {
+    float: left;
+    width: 100%;
+    margin-top: 30px;
+}
+
+
+.file-input {
+    display: none;
+}
+.file-label {
+    float: left;
+    width: 100px;
+    height: 90px;
+    cursor: pointer;
+    background: url('../public/open-folder.png');
+    background-size: 50px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: hwb(0 91% 9%);
+    border-radius: 5px;
+}
+
+.file-p{
+  float: left ;
+  width: 100px;
+  height: 100px;
+}
 

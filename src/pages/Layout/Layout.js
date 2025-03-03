@@ -32,6 +32,9 @@ const Layout = () => {
                     <span onClick={handleClick} className={activeLink && activeLink.textContent === "МАГАЗИН" ? "clicked" : ""}>
                         <Link to='/Repairs'>МАГАЗИН</Link>
                     </span>
+                    <span onClick={handleClick} className={activeLink && activeLink.textContent === "СЛУЖИТЕЛИ" ? "clicked" : ""}>
+                        <Link to='/Employees'>СЛУЖИТЕЛИ</Link>
+                    </span>
                 </div>
 
                 <div class='menu-profile'>

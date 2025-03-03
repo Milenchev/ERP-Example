@@ -23,6 +23,8 @@ import Orders from "./pages/Orders/Orders";
 import AddOrder from "./pages/AddOrder/AddOrder";
 import AutoInvoices from "./pages/AutoInvoices/AutoInvoices";
 import AutoInvoiceAdd from "./pages/AutoInvoiceAdd/AutoInvoiceAdd";
+import Employees from "./pages/Employees/Employees";
+import AddEmployees from "./pages/AddEmployees/AddEmployees";
 
 function App() {
     return (
@@ -90,6 +92,12 @@ function App() {
                 </Route>
                 <Route path='/auto-invoice-add' element={<Layout />}>
                     <Route index element={<AutoInvoiceAdd />} />
+                </Route>
+                <Route path='/employees' element={<Layout />}>
+                    <Route index element={<Employees />} />
+                </Route>
+                <Route path='/add-employee' element={<Layout />}>
+                    <Route index element={<AddEmployees />} />
                 </Route>
             </Routes>
         </BrowserRouter>

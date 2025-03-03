@@ -11,7 +11,6 @@ const AddOrder = () => {
     const [itemAdded, setItemAdded] = useState([{ id: 1, productName: "", unit: 0, quantity: 0, price: 0 }]);
 
     const [items, setItems] = useState([]); // State to store API data
-    const [selectedItem, setSelectedItem] = useState(0);
     const [loading, setLoading] = useState(true); // Loading state
     const [error, setError] = useState(null); // Error state
 
@@ -84,9 +83,6 @@ const AddOrder = () => {
         setItemAdded(updatedItem);
     };
 
-    const handleDeleteRow = (id) => {
-        setOrderAdded(orderAdded.filter((item) => item.id !== id));
-    };
     return (
         <div className={styles.AddOrder}>
             <div className='add-fax-holder'>

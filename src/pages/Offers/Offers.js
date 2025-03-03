@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import styles from "./Offers.module.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Outlet, Link } from "react-router-dom";
+import Table from "../../components/Table";
 
 const Offers = () => {
     const [activeLink, setActiveLink] = useState(null);
@@ -10,6 +11,16 @@ const Offers = () => {
     const [offers, setOffers] = useState([]); // State to store API data
     const [loading, setLoading] = useState(true); // Loading state
     const [error, setError] = useState(null); // Error state
+
+    const columns = [
+        { header: "Дата", key: "dateOfOffer" },
+        { header: "Заглавие", key: "heading" },
+        { header: "Клиент", key: "clientName" },
+        { header: "Стойност", key: "price" },
+        { header: "Тип", key: "typeOfOffer" },
+        { header: "Статус", key: "state" },
+        { header: "Действия", key: "actions" },
+    ];
 
     // Fetch data from RESTful API
     useEffect(() => {
@@ -59,6 +70,42 @@ const Offers = () => {
         }
     };
 
+    const tableData = offers.map((offer, index) => ({
+        index: index + 1,
+        ...offer,
+        state:
+            offer.state === 0 ? (
+                <span className='badge-waiting'>ЧАКА ПЛАЩАНЕ</span>
+            ) : offer.state === 1 ? (
+                <span className='badge-paid'>ПЛАТЕНА</span>
+            ) : offer.state === 2 ? (
+                <span className='badge-failed'>ПРОПУСНАТО ПЛАЩАНЕ</span>
+            ) : (
+                <h1>Unknown Status</h1>
+            ),
+
+        typeOfOffer:
+            offer.typeOfOffer === 0 ? <span>Фактура</span> : offer.typeOfOffer === 1 ? <span>Проформа фактура</span> : <h1>Unknown Status</h1>,
+
+        actions: (
+            <div className='icons'>
+                <i className='icon-pen'></i>
+
+                <i className='icon-print'></i>
+
+                <i className='icon-bag'></i>
+                <i
+                    className='icon-trash'
+                    onClick={() => handleDelete(offer.uid)}
+                    style={{
+                        cursor: "pointer",
+                        color: "red",
+                    }}
+                ></i>
+            </div>
+        ),
+    }));
+
     return (
         <div className={styles.Offers}>
             <div className='invoices-nav'>
@@ -107,66 +154,9 @@ const Offers = () => {
                 </div>
 
                 <div className='invoices-table'>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th width='8%'>Дата</th>
-                                <th width='20%'>Заглавие</th>
-                                <th width='20%'>Клиент</th>
-                                <th width='10%'>Стойност</th>
-                                <th width='10%'>Тип</th>
-                                <th width='15%'>Статус</th>
-                                <th width='15%'>Действие</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {offers.map((offer, index) => (
-                                <tr>
-                                    <td width='8%'>{offer.dateOfOffer}</td>
-                                    <td width='20%'>{offer.heading}</td>
-                                    <td width='20%'>{offer.clientName} </td>
-                                    <td width='10%'>{offer.price} лв.</td>
-                                    <td width='10%'>
-                                        {offer.typeOfOffer === 0 ? (
-                                            <span>Обект</span>
-                                        ) : offer.state === 1 ? (
-                                            <span>Проект</span>
-                                        ) : (
-                                            <h1>Unknown Status</h1>
-                                        )}
-                                    </td>
-
-                                    <td width='15%'>
-                                        {offer.state === 0 ? (
-                                            <span className='badge-waiting'>ЧАКА ПЛАЩАНЕ</span>
-                                        ) : offer.state === 1 ? (
-                                            <span className='badge-paid'>ПЛАТЕНА</span>
-                                        ) : offer.state === 2 ? (
-                                            <span className='badge-failed'>ПРОПУСНАТО ПЛАЩАНЕ</span>
-                                        ) : (
-                                            <h1>Unknown Status</h1>
-                                        )}
-                                    </td>
-
-                                    <td width='15%'>
-                                        <i className='icon-pen'></i>
-                                        <Link to={`/print-offers?offer_id=${offer.uid}`}>
-                                            <i className='icon-print'></i>
-                                        </Link>
-                                        <i className='icon-bag'></i>
-                                        <i
-                                            className='icon-trash'
-                                            onClick={() => handleDelete(offer.uid)}
-                                            style={{
-                                                cursor: "pointer",
-                                                color: "red",
-                                            }}
-                                        ></i>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                    <div className='invoices-table'>
+                        <Table data={tableData} columns={columns} showActions={true} onDelete={handleDelete} />
+                    </div>
                 </div>
             </div>
         </div>

@@ -10,13 +10,19 @@ const AddOutputInvoice = () => {
     const [invoiceTotalValue, setInvoiceTotalValue] = useState(0);
     const [faxDate, setFaxDate] = useState("");
     const [paymentType, setPaymentType] = useState("0");
-    const [responseProducts, setResponseProducts] = useState([]);
     const [products, setProducts] = useState([{ id: 1, name: "", unit: "бр.", quantity: 0, price: 0, discount: 0 }]);
+    const [fileBase64, setFileBase64] = useState("");
 
     const handleClick = async () => {
         try {
             var invoiceTotalValue = products
-                .reduce((acc, invoice) => acc + invoice.quantity * invoice.price * (1 - invoice.discount / 100) + invoice.quantity * invoice.price * (1 - invoice.discount / 100) * 0.2, 0)
+                .reduce(
+                    (acc, invoice) =>
+                        acc +
+                        invoice.quantity * invoice.price * (1 - invoice.discount / 100) +
+                        invoice.quantity * invoice.price * (1 - invoice.discount / 100) * 0.2,
+                    0
+                )
                 .toFixed(2);
             let date_split = faxDate.split(".");
             let exp_date = new Date(date_split[1] + "." + date_split[0] + "." + date_split[2]);
@@ -36,6 +42,7 @@ const AddOutputInvoice = () => {
                         date: faxDate,
                         typeOfPayment: paymentType,
                         total_value: invoiceTotalValue,
+                        base_64_file: fileBase64,
                         products: products,
                     },
                 }), // Send your data here
@@ -49,26 +56,16 @@ const AddOutputInvoice = () => {
         }
     };
 
-    const handleInputChange = (id, e, index, key) => {
-        // Update the product details
-        let updatedProducts = products.map((item) => (item.id === id ? { ...item, [key]: e.target.value } : item));
-
-        // Check if it's the last row and input is not empty
-        if (index === products.length - 1 && e.target.value !== "") {
-            updatedProducts = [
-                ...updatedProducts,
-                {
-                    id: products.length + 1,
-                    name: "",
-                    unit: "бр.",
-                    quantity: 0,
-                    price: 0,
-                    discount: 0,
-                },
-            ];
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file); // Convert file to Base64
+            reader.onload = () => {
+                const base64File = reader.result.split(",")[1];
+                setFileBase64(reader.result.split(",")[1]);
+            };
         }
-
-        setProducts(updatedProducts);
     };
 
     return (
@@ -83,17 +80,39 @@ const AddOutputInvoice = () => {
                         <span style={{ marginBottom: "15px", fontWeight: "Bold" }}>Основна информация</span>
                         <div className='col-3 input-row'>
                             <span>Доставчик</span>
-                            <input style={{ width: "80%" }} className='input-label' type='text' placeholder='' name='defaultInput' value={supplier} onChange={(e) => setSupplier(e.target.value)} />
+                            <input
+                                style={{ width: "80%" }}
+                                className='input-label'
+                                type='text'
+                                placeholder=''
+                                name='defaultInput'
+                                value={supplier}
+                                onChange={(e) => setSupplier(e.target.value)}
+                            />
                         </div>
 
                         <div className='col-2 input-row'>
                             <span>Фактура номер</span>
-                            <input className='input-label' type='text' placeholder='' name='defaultInput' value={faxNum} onChange={(e) => setFaxNum(e.target.value)} />
+                            <input
+                                className='input-label'
+                                type='text'
+                                placeholder=''
+                                name='defaultInput'
+                                value={faxNum}
+                                onChange={(e) => setFaxNum(e.target.value)}
+                            />
                         </div>
 
                         <div style={{ marginLeft: "60px" }} className='col-2 input-row'>
                             <span>Дата на фактура</span>
-                            <input className='input-label' type='text' placeholder='' name='defaultInput' value={faxDate} onChange={(e) => setFaxDate(e.target.value)} />
+                            <input
+                                className='input-label'
+                                type='text'
+                                placeholder=''
+                                name='defaultInput'
+                                value={faxDate}
+                                onChange={(e) => setFaxDate(e.target.value)}
+                            />
                         </div>
 
                         <div style={{ marginLeft: "60px" }} className='col-3 input-row'>
@@ -134,7 +153,14 @@ const AddOutputInvoice = () => {
 
                         <div className='col-2 input-row' style={{ marginTop: "48px", marginLeft: "60px" }}>
                             <span>Сума за плащане (С ДДС)</span>
-                            <input className='input-label' type='text' placeholder='' name='defaultInput' value={invoiceTotalValue} onChange={(e) => setInvoiceTotalValue(e.target.value)} />
+                            <input
+                                className='input-label'
+                                type='text'
+                                placeholder=''
+                                name='defaultInput'
+                                value={invoiceTotalValue}
+                                onChange={(e) => setInvoiceTotalValue(e.target.value)}
+                            />
                         </div>
 
                         <div className='col-2 input-row' style={{ marginTop: "48px", marginLeft: "57px" }}>
@@ -144,6 +170,25 @@ const AddOutputInvoice = () => {
                                 <option>$</option>
                                 <option>Евро</option>
                             </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div className='input-holder'>
+                    <div className='row'>
+                        <div className='col-2 input-row' style={{ marginTop: "48px" }}>
+                            <span>Документация</span>
+                            <input
+                                className='invoice-add-input file-input'
+                                type='file'
+                                accept='.pdf'
+                                name='invoiceFile'
+                                id='invoiceFile'
+                                onChange={handleFileChange}
+                            />
+
+                            <label htmlFor='invoiceFile' className='file-label'></label>
+                            <span className='file-p'>Избери фаил</span>
                         </div>
                     </div>
                 </div>

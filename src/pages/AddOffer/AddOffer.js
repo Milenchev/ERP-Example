@@ -17,10 +17,6 @@ const AddOffer = () => {
 
     const addOffer = async () => {
         try {
-            var offerTotalValue = products
-                .reduce((acc, offer) => acc + offer.quantity * offer.price * (1 - offer.discount / 100) + offer.quantity * offer.price * (1 - offer.discount / 100) * 0.2, 0)
-                .toFixed(2);
-
             const response = await fetch("http://localhost:5001/addOffers", {
                 method: "POST",
                 headers: {
@@ -108,12 +104,26 @@ const AddOffer = () => {
 
                                 <div className='col-3 input-row'>
                                     <span>МОЛ</span>
-                                    <input style={{ width: "80%" }} className='input-label' type='text' placeholder='' name='defaultInput' value={mol} onChange={(e) => setMol(e.target.value)} />
+                                    <input
+                                        style={{ width: "80%" }}
+                                        className='input-label'
+                                        type='text'
+                                        placeholder=''
+                                        name='defaultInput'
+                                        value={mol}
+                                        onChange={(e) => setMol(e.target.value)}
+                                    />
                                 </div>
 
                                 <div className='col-3 input-row'>
                                     <span>Тип на оферта</span>
-                                    <select style={{ width: "80%" }} id='type' name='type' value={typeOfOffer} onChange={(e) => setTypeOfOffer(e.target.value)}>
+                                    <select
+                                        style={{ width: "80%" }}
+                                        id='type'
+                                        name='type'
+                                        value={typeOfOffer}
+                                        onChange={(e) => setTypeOfOffer(e.target.value)}
+                                    >
                                         <option value='0'>Проект</option>
                                         <option value='1'>Обект</option>
                                     </select>
@@ -134,7 +144,14 @@ const AddOffer = () => {
 
                                 <div className='col-2 input-row'>
                                     <span style={{ marginTop: "10px" }}>Заглавие</span>
-                                    <input className='input-label' type='text' placeholder='' name='defaultInput' value={heading} onChange={(e) => setHeading(e.target.value)} />
+                                    <input
+                                        className='input-label'
+                                        type='text'
+                                        placeholder=''
+                                        name='defaultInput'
+                                        value={heading}
+                                        onChange={(e) => setHeading(e.target.value)}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -158,18 +175,31 @@ const AddOffer = () => {
                                         <td width='3%'></td>
                                         <td width='20%'>
                                             {" "}
-                                            <input class='width-90' type='text' value={offer.productName} onChange={(e) => handleInputChange(offer.offerId, e, index, "productName")} />
+                                            <input
+                                                class='width-90'
+                                                type='text'
+                                                value={offer.productName}
+                                                onChange={(e) => handleInputChange(offer.offerId, e, index, "productName")}
+                                            />
                                         </td>
                                         <td>
                                             <input value={offer.unit} onChange={(e) => handleInputChange(offer.offerId, e, index, "unit")}></input>
                                         </td>
 
                                         <td>
-                                            <input type='number' value={offer.quantity} onChange={(e) => handleInputChange(offer.offerId, e, index, "quantity")}></input>
+                                            <input
+                                                type='number'
+                                                value={offer.quantity}
+                                                onChange={(e) => handleInputChange(offer.offerId, e, index, "quantity")}
+                                            ></input>
                                         </td>
 
                                         <td>
-                                            <input type='text' value={offer.price} onChange={(e) => handleInputChange(offer.offerId, e, index, "price")} />{" "}
+                                            <input
+                                                type='text'
+                                                value={offer.price}
+                                                onChange={(e) => handleInputChange(offer.offerId, e, index, "price")}
+                                            />{" "}
                                         </td>
                                         <td>{offer.price} лв.</td>
                                     </tr>
@@ -195,7 +225,15 @@ const AddOffer = () => {
                                     <td className='bold-right' colSpan='1'>
                                         Общо с ДДС
                                     </td>
-                                    <td>{products.reduce((acc, invoice) => acc + invoice.quantity * invoice.price + invoice.quantity * invoice.price * 0.2, 0).toFixed(2)} лв.</td>
+                                    <td>
+                                        {products
+                                            .reduce(
+                                                (acc, invoice) => acc + invoice.quantity * invoice.price + invoice.quantity * invoice.price * 0.2,
+                                                0
+                                            )
+                                            .toFixed(2)}{" "}
+                                        лв.
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

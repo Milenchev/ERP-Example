@@ -2,11 +2,23 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import styles from "./Repairs.module.css";
 import { Outlet, Link } from "react-router-dom";
+import Table from "../../components/Table";
 
 const Repairs = () => {
     const [repairs, setRepairs] = useState([]); // State to store API data
     const [loading, setLoading] = useState(true); // Loading state
     const [error, setError] = useState(null); // Error state
+
+    const columns = [
+        { header: "Клиент", key: "client" },
+        { header: "Приет на", key: "arrivalDate" },
+        { header: "Вх. товарителница", key: "shipmentNum" },
+        { header: "Изпратен на", key: "sentDate" },
+        { header: "Изх. товарителница", key: "outgoingShipmentNum" },
+        { header: "Артикули", key: "Articles" },
+        { header: "Статус", key: "state" },
+        { header: "Действия", key: "actions" },
+    ];
 
     useEffect(() => {
         const fetchData = async () => {
@@ -52,6 +64,36 @@ const Repairs = () => {
         }
     };
 
+    const tableData = filterRepairs.map((repair) => ({
+        ...repair,
+        state:
+            repair.state === 0 ? (
+                <span className='badge-waiting'>ЧАКА ПЛАЩАНЕ</span>
+            ) : repair.state === 1 ? (
+                <span className='badge-paid'>ПЛАТЕНА</span>
+            ) : repair.state === 2 ? (
+                <span className='badge-failed'>ПРОПУСНАТО ПЛАЩАНЕ</span>
+            ) : (
+                <h1>Unknown Status</h1>
+            ),
+
+        actions: (
+            <div className='icons'>
+                <i className='icon-pen'></i>
+
+                <i className='icon-bag'></i>
+                <i
+                    className='icon-trash'
+                    onClick={() => handleDelete(repair.uid)}
+                    style={{
+                        cursor: "pointer",
+                        color: "red",
+                    }}
+                ></i>
+            </div>
+        ),
+    }));
+
     return (
         <div className={styles.Repairs}>
             <div className='invoices-nav'>
@@ -84,57 +126,9 @@ const Repairs = () => {
                 </div>
 
                 <div className='invoices-table'>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Клиент</th>
-                                <th>Приет на</th>
-                                <th>Вх. товарителница</th>
-                                <th>Изпратен на</th>
-                                <th>Изх. товарителница</th>
-                                <th>Артикули </th>
-                                <th>Статус </th>
-                                <th>Действие </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filterRepairs.map((repair, index) => (
-                                <tr>
-                                    <td>{repair.client}</td>
-                                    <td>{repair.arrivalDate}</td>
-                                    <td>{repair.shipmentNum}</td>
-                                    <td>{repair.sentDate}</td>
-                                    <td>{repair.outgoingShipmentNum}</td>
-                                    <td>{repair.Articles}</td>
-                                    <td>
-                                        {repair.state === 0 ? (
-                                            <span className='badge-waiting'>ЧАКА ПЛАЩАНЕ</span>
-                                        ) : repair.state === 1 ? (
-                                            <span className='badge-paid'>ПЛАТЕНА</span>
-                                        ) : repair.state === 2 ? (
-                                            <span className='badge-failed'>ПРОПУСНАТО ПЛАЩАНЕ</span>
-                                        ) : (
-                                            <h1>Unknown Status</h1>
-                                        )}
-                                    </td>
-
-                                    <td>
-                                        <Link to={`/work-repair?repair_id=${repair.uid}`}>
-                                            <i className='icon-work'></i>
-                                        </Link>
-                                        <i
-                                            className='icon-trash'
-                                            onClick={() => handleDelete(repair.uid)}
-                                            style={{
-                                                cursor: "pointer",
-                                                color: "red",
-                                            }}
-                                        ></i>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                    <div className='invoices-table'>
+                        <Table data={tableData} columns={columns} showActions={true} onDelete={handleDelete} />
+                    </div>
                 </div>
             </div>
         </div>

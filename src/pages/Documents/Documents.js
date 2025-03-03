@@ -4,6 +4,7 @@ import styles from "./Documents.module.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Outlet, Link, useLocation } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+import Table from "../../components/Table";
 
 const Documents = () => {
     const location = useLocation(); // Get current location (path)
@@ -13,8 +14,18 @@ const Documents = () => {
     const [outgoingInvoices, setOutgoingInvoices] = useState([]); // State to store API data
     const [loading, setLoading] = useState(true); // Loading state
     const [error, setError] = useState(null); // Error state
-    const [activeLink, setActiveLink] = useState(null);
     const totalOutgoingValue = outgoingInvoices.reduce((sum, invoice) => sum + invoice.invoiceValue, 0);
+
+    const columns = [
+        { header: "#", key: "index", width: "3%" },
+        { header: "Дата на издаване", key: "date" },
+        { header: "Тип", key: "type" },
+        { header: "Клиент", key: "client" },
+        { header: "Стойност", key: "invoiceValue" },
+        { header: "Тип на плащане", key: "typeOfPayment" },
+        { header: "Статус", key: "invoiceState" },
+        { header: "Действия", key: "actions" },
+    ];
 
     // Fetch data from RESTful API
     useEffect(() => {
@@ -59,6 +70,52 @@ const Documents = () => {
     const [searchTerm, setSearchTerm] = useState("");
 
     const filterOutgoingInvoices = outgoingInvoices.filter((invoice) => invoice.client.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    const tableData = filterOutgoingInvoices.map((invoice, index) => ({
+        index: index + 1,
+        ...invoice,
+        invoiceState:
+            invoice.invoiceState === 0 ? (
+                <span className='badge-waiting'>ЧАКА ПЛАЩАНЕ</span>
+            ) : invoice.invoiceState === 1 ? (
+                <span className='badge-paid'>ПЛАТЕНА</span>
+            ) : invoice.invoiceState === 2 ? (
+                <span className='badge-failed'>ПРОПУСНАТО ПЛАЩАНЕ</span>
+            ) : (
+                <h1>Unknown Status</h1>
+            ),
+
+        type: invoice.type === 0 ? <span>Фактура</span> : invoice.type === 1 ? <span>Проформа фактура</span> : <h1>Unknown Status</h1>,
+        typeOfPayment:
+            invoice.typeOfPayment === 0 ? (
+                <span>Банков път</span>
+            ) : invoice.typeOfPayment === 1 ? (
+                <span>В брой</span>
+            ) : invoice.typeOfPayment === 2 ? (
+                <span>Пощенски паричен</span>
+            ) : (
+                <h1>Unknown Status</h1>
+            ),
+
+        // Add actions column
+        actions: (
+            <div className='icons'>
+                <i className='icon-pen'></i>
+                <Link to={`/view-invoice?invoice_id=${invoice.uid}`}>
+                    <i className='icon-print'></i>
+                </Link>
+                <i className='icon-bag'></i>
+                <i
+                    className='icon-trash'
+                    onClick={() => handleDelete(invoice.uid)}
+                    style={{
+                        cursor: "pointer",
+                        color: "red",
+                    }}
+                ></i>
+            </div>
+        ),
+    }));
 
     return (
         <div className={styles.Documents}>
@@ -127,85 +184,12 @@ const Documents = () => {
                 </div>
 
                 <div class='invoices-table'>
+                    <div className='invoices-table'>
+                        <div className='invoices-table'>
+                            <Table data={tableData} columns={columns} showActions={true} onDelete={handleDelete} />
+                        </div>
+                    </div>
                     <table>
-                        <thead>
-                            <tr>
-                                <th width='3%'>#</th>
-                                <th width='20%'>Дата на издаване</th>
-                                <th>Тип</th>
-                                <th>Клиент</th>
-                                <th>Стойност</th>
-                                <th>Тип на плащане</th>
-                                <th>Статус</th>
-                                <th>Действие</th>
-                            </tr>
-                        </thead>
-                        <tbody class='invoices-th'>
-                            {filterOutgoingInvoices.map((invoice, index) => (
-                                <tr>
-                                    <td width='3%'>{index + 1}</td>
-                                    <td width='20%'>{invoice.date}</td>
-                                    <td>
-                                        {invoice.type === 0 ? (
-                                            <span> Фактура</span>
-                                        ) : invoice.type === 1 ? (
-                                            <span> Проформа фактура</span>
-                                        ) : (
-                                            <h1>Unknown Status</h1>
-                                        )}
-                                    </td>
-                                    <td>{invoice.client}</td>
-                                    <td>{invoice.invoiceValue} лв</td>
-                                    <td>
-                                        {invoice.typeOfPayment === 0 ? (
-                                            <span>Банков път</span>
-                                        ) : invoice.typeOfPayment === 1 ? (
-                                            <span>В брой</span>
-                                        ) : invoice.typeOfPayment === 2 ? (
-                                            <span>Пощенски паричен</span>
-                                        ) : (
-                                            <h1>Unknown Status</h1>
-                                        )}
-                                    </td>
-
-                                    <td class='status'>
-                                        {invoice.invoiceState === 0 ? (
-                                            <span className='badge-waiting'>ЧАКА ПЛАЩАНЕ</span>
-                                        ) : invoice.invoiceState === 1 ? (
-                                            <span className='badge-paid'>ПЛАТЕНА</span>
-                                        ) : invoice.invoiceState === 2 ? (
-                                            <span className='badge-failed'>ПРОПУСНАТО ПЛАЩАНЕ</span>
-                                        ) : (
-                                            <h1>Unknown Status</h1>
-                                        )}
-                                    </td>
-
-                                    <td class='icons'>
-                                        <i class='icon-pen'></i>
-                                        <Link to={`/view-invoice?invoice_id=${index}`}>
-                                            <i class='icon-print'></i>
-                                        </Link>
-                                        <i class='icon-bag'></i>
-                                        <i
-                                            class='icon-trash'
-                                            onClick={() => handleDelete(invoice.uid)}
-                                            style={{
-                                                cursor: "pointer",
-                                                color: "red",
-                                            }}
-                                        >
-                                            {" "}
-                                        </i>
-                                    </td>
-                                </tr>
-                            ))}
-
-                            {filterOutgoingInvoices.length === 0 && (
-                                <tr>
-                                    <td colspan='8'>Няма налични резултати</td>
-                                </tr>
-                            )}
-                        </tbody>
                         <tfoot>
                             <tr>
                                 <td colSpan='6' style={{ textAlign: "left" }}>
